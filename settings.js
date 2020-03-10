@@ -12,7 +12,7 @@ module.exports = {
   DEV_MODE: true,
 
   // name of database
-  DB_NAME: 'db',
+  DB_NAME: 'asl_cards',
 
   // domain through which server is accessible
   DOMAIN: 'http://localhost:8080',
@@ -26,6 +26,6 @@ module.exports = {
   EMAIL_RESTRICTION: /.+?@brown\.edu$/gm,
 
   // name of this system
-  SYSTEM_NAME: 'Template System'
+  SYSTEM_NAME: 'ASL Flashcard System'
 
 }
