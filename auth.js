@@ -29,6 +29,10 @@ module.exports = (app, passport) => {
       } else if (sys.ALLOW_NEW_ACCOUNTS && (!sys.EMAIL_RESTRICTION || sys.EMAIL_RESTRICTION.test(email))) {
         // add new user account
         db.addUserFromGoogle(user, (err, profile) => {
+          if (err) {
+            return done("The system failed to add a new user account for (" + email + ")", null);
+          }
+
           // cache profile
           user.local = profile;
           

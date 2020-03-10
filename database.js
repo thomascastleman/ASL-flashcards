@@ -36,13 +36,6 @@ module.exports = {
   /*  Add a new system user account, given the user's Google info.
       Callback on profile of created user. */
   addUserFromGoogle: (user, cb) => {
-    
-    /*
-      **********************************************************************
-      * Rewrite as necessary to cover all necessary fields in users table. *
-      **********************************************************************
-    */
-
     // make insert and retrieve inserted profile data (assumes default role is 1)
     con.query('INSERT INTO users (email, role) VALUES (?, 1); SELECT * FROM users WHERE uid = LAST_INSERT_ID();', [user._json.email], (err, rows) => {
       if (!err && rows !== undefined && rows.length > 1 && rows[1].length > 0) {
