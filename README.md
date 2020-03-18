@@ -1,11 +1,5 @@
-# node-template
-Boilerplate Node.js app with Express &amp; Google OAuth 2.0
-
-### Note
-
-- Please rename the database (in `db.sql` and `settings.js`).
-- Please update most everything in `settings.js` to reflect your system
-
+# ASL-flashcards
+An application to provide flashcard quizzes using video/English cards for expansion of American Sign Language vocabulary.
 
 ### Credentials
 
@@ -36,9 +30,7 @@ module.exports = {
 
 Build the database with `SOURCE db.sql;`.
 
-Make sure to `GRANT ALL PRIVILEGES ON <DB NAME>.* TO '<DB USER>'@'localhost';` and `FLUSH PRIVILEGES;` before attempting to run the software.
-
-The database comes with two tables: `users` and `roles`. These are the bare minimum, and can be modified and expanded as necessary.
+Make sure to `GRANT ALL PRIVILEGES ON asl_cards.* TO '<YOUR DB USER>'@'localhost';` and `FLUSH PRIVILEGES;` before attempting to run the software.
 
 ### Templates
 
