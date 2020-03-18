@@ -17,7 +17,8 @@ INSERT INTO roles (title) VALUES ("Default");
 -- user information
 CREATE TABLE users (
   uid INT NOT NULL AUTO_INCREMENT,
-  role INT,
+  role INT DEFAULT 1,
+  name VARCHAR(128),
   email VARCHAR(64),
   FOREIGN KEY (role) REFERENCES roles(uid),
   PRIMARY KEY (uid)
@@ -35,7 +36,7 @@ CREATE TABLE flashcards (
 -- groups of flashcards
 CREATE TABLE groups (
   uid INT NOT NULL AUTO_INCREMENT,
-  name VARCHAR(2),
+  name VARCHAR(256),
   owner_uid INT NOT NULL,
   PRIMARY KEY (uid),
   FOREIGN KEY (owner_uid) REFERENCES users (uid)
