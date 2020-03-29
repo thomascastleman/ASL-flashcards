@@ -25,7 +25,7 @@ module.exports = {
         cb(new Error("Failed to retrieve flashcard row on insert"));
       }
 
-      // send back the profile
+      // send back the row
       cb(err, rows[1][0]);
     }
 
@@ -46,7 +46,7 @@ module.exports = {
         cb(new Error("Failed to retrieve flashcard row on update"));
       }
 
-      // send back the profile
+      // send back the row
       cb(err, rows[1][0]);
     }
 
@@ -69,12 +69,12 @@ module.exports = {
 
 // Tests
 /*
+
 module.exports.addFlashcard('GLOSS', 'Test definition', 
 'https://www.handspeak.com/word/t/test.mp4', (err, row) => {
   console.log(err);
   console.log(row);
 });
-
 
 module.exports.editFlashcard(1, 'UPDATED GLOSS', 'new definition', 'new video', 
 (err, row) => {
@@ -82,8 +82,8 @@ module.exports.editFlashcard(1, 'UPDATED GLOSS', 'new definition', 'new video',
   console.log(row);
 });
 
-*/
-
 module.exports.deleteFlashcard(2, (err) => {
   console.log(err);
 });
+
+*/
