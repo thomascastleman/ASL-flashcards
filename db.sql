@@ -37,7 +37,7 @@ CREATE TABLE flashcards (
 CREATE TABLE groups (
   uid INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(256),
-  owner_uid INT NOT NULL,
+  owner_uid INT,
   PRIMARY KEY (uid),
   FOREIGN KEY (owner_uid) REFERENCES users (uid)
 );
@@ -48,8 +48,8 @@ CREATE TABLE in_group (
   group_uid INT NOT NULL,
   flashcard_uid INT NOT NULL,
   PRIMARY KEY (uid),
-  FOREIGN KEY (group_uid) REFERENCES groups (uid),
-  FOREIGN KEY (flashcard_uid) REFERENCES flashcards (uid)
+  FOREIGN KEY (group_uid) REFERENCES groups (uid) ON DELETE CASCADE,
+  FOREIGN KEY (flashcard_uid) REFERENCES flashcards (uid) ON DELETE CASCADE
 );
 
 CREATE TABLE accuracy (
@@ -59,6 +59,6 @@ CREATE TABLE accuracy (
   correct INT DEFAULT 0,      -- number of correct responses to this card
   total INT DEFAULT 0,        -- number of attempts made
   PRIMARY KEY (uid),
-  FOREIGN KEY (user_uid) REFERENCES users (uid),
-  FOREIGN KEY (flashcard_uid) REFERENCES flashcards (uid)
+  FOREIGN KEY (user_uid) REFERENCES users (uid) ON DELETE CASCADE,
+  FOREIGN KEY (flashcard_uid) REFERENCES flashcards (uid) ON DELETE CASCADE
 );
