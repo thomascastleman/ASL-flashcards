@@ -13,6 +13,45 @@ module.exports = {
     owner_uid :: Number 
   } */
 
+  /*  getGroup :: (uid :: Number -> { uid :: Number, name :: String,
+                  owner_uid :: Number, flashcards :: List<FlashcardRow> })
+      Get the group (and all its flashcards) associated with a UID */
+  getGroup: (uid, cb) => {
+    const returnRow = (err, rows) => {
+      if (err) return cb(err);
+
+      if (!rows || rows.length < 1) {
+        return cb(new Error("Failed to find a group with the given identifier"));
+      }
+
+      //cb(err, rows[0]);
+      let group = rows[0];
+      
+      const addCardsToGroup = (err, rows) => {
+        if (err) return cb(err);
+
+        if (!rows) return cb(new Error("Failed to retrieve rows associated with indicated group"));
+
+        // add cards to the group object and return
+        group.flashcards = rows;
+        cb(err, group);
+      }
+
+      // get the flashcards in this group
+      con.query(
+        `SELECT * FROM 
+          in_group i JOIN flashcards f ON i.flashcard_uid = f.uid 
+        WHERE i.group_uid = ?;`,
+        [group.uid], addCardsToGroup);
+
+    }
+
+    // get the group metadata
+    con.query(
+      `SELECT * FROM groups WHERE uid = ?;`, 
+      [uid], returnRow);
+  },
+
   /*  addGroup :: (name :: String, userUID :: Number -> GroupRow)
       Adds a new group of flashcards to the database, returning the row */
   addGroup: (name, userUID, cb) => {
@@ -63,6 +102,11 @@ module.exports = {
 
 // Tests
 /*
+
+module.exports.getGroup(5, (err, group) => {
+  console.log(err);
+  console.log(group);
+});
 
 module.exports.addGroup("NEW GROUP", 1, (err, row) => {
   console.log(err);
