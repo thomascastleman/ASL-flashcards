@@ -1,6 +1,6 @@
 
 /*
-  group.js: (Groups of flashcards)-related database queries
+  database/group.js: (Groups of flashcards)-related database queries
 */
 
 const con = require('../database.js').connection;

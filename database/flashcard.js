@@ -1,6 +1,6 @@
 
 /*
-  flashcard.js: Flashcard-related database queries
+  database/flashcard.js: Flashcard-related database queries
 */
 
 const con = require('../database.js').connection;
@@ -14,15 +14,33 @@ module.exports = {
     video :: String 
   } */
 
+  /*  getFlashcard :: (uid :: Number -> FlashcardRow)
+      Get the flashcard row associated with a given UID */
+  getFlashcard: (uid, cb) => {
+    const returnRow = (err, rows) => {
+      if (err) return cb(err);
+
+      if (!rows || rows.length < 1) {
+        return cb(new Error("Failed to find a flashcard with the given identifier"));
+      }
+
+      cb(err, rows[0]);
+    }
+
+    con.query(
+      `SELECT * FROM flashcards WHERE uid = ?;`, 
+      [uid], returnRow);
+  },
+
   /*  addFlashcard :: (gloss :: String, definition :: String, video :: String 
                       -> FlashcardRow)
       Adds a new flashcard to the database, returning the row */
   addFlashcard: (gloss, definition, video, cb) => {
     const handle = (err, rows) => {
-      if (err) cb(err);
+      if (err) return cb(err);
 
       if (rows.length < 2 || rows[1].length < 1) {
-        cb(new Error("Failed to retrieve flashcard row on insert"));
+        return cb(new Error("Failed to retrieve flashcard row on insert"));
       }
 
       // send back the row
@@ -40,10 +58,10 @@ module.exports = {
       Edits the fields of an existing flashcard */
   editFlashcard: (uid, gloss, definition, video, cb) => {
     const handle = (err, rows) => {
-      if (err) cb(err);
+      if (err) return cb(err);
 
       if (rows.length < 2 || rows[1].length < 1) {
-        cb(new Error("Failed to retrieve flashcard row on update"));
+        return cb(new Error("Failed to retrieve flashcard row on update"));
       }
 
       // send back the row
@@ -69,6 +87,11 @@ module.exports = {
 
 // Tests
 /*
+
+module.exports.getFlashcard(100, (err, row) => {
+  console.log(err);
+  console.log(row);
+});
 
 module.exports.addFlashcard('GLOSS', 'Test definition', 
 'https://www.handspeak.com/word/t/test.mp4', (err, row) => {

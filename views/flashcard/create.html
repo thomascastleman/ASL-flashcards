@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>An Error Occurred! | {{defaults.sysName}}</title>
+  <title>Create a Flashcard | {{defaults.sysName}}</title>
   <link rel="stylesheet" type="text/css" href="css/reset.css">
   <link rel="stylesheet" type="text/css" href="css/defaults.css">
   <link rel="stylesheet" type="text/css" href="css/navbar.css">
@@ -21,15 +21,13 @@
     </ul>
   </div>
   <div class="container">
-  	{{#defaults.devMode}}
-      <pre>{{raw}}</pre>
-    {{/defaults.devMode}}
-
-  	<p>{{friendly}}</p>
-
-    {{#link}}
-      <a href="{{link}}">{{linkTitle}}</a>
-    {{/link}}
+    <h1>Create a Flashcard</h1>
+    <form action="/flashcard/create" method="POST">
+      <input name="gloss" type="text" autocomplete="off" placeholder="Gloss"><br>
+      <textarea name="definition" type="text" autocomplete="off" placeholder="Definition"></textarea><br>
+      <input name="video" type="text" autocomplete="off" placeholder="Video URL"><br>
+      <input type="submit">
+    </form>
   </div>
 </body>
 </html>

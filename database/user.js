@@ -1,6 +1,6 @@
 
 /*
-  user.js: User-related database queries
+  database/user.js: User-related database queries
 */
 
 const con = require('../database.js').connection;

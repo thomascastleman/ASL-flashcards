@@ -11,8 +11,12 @@
     <ul>
       <li><a href="/">{{defaults.sysName}}</a></li>
       <div style="float:right">
-        <li><a href="/auth/google">Log In</a></li>
-        <li><a href="/logout">Log Out</a></li>
+        {{^defaults.isAuth}}
+          <li><a href="/auth/google">Log In</a></li>
+        {{/defaults.isAuth}}
+        {{#defaults.isAuth}}
+          <li><a href="/logout">Log Out</a></li>
+        {{/defaults.isAuth}}
       </div>
     </ul>
   </div>

@@ -1,6 +1,6 @@
 
 /*
-  ingroup.js: Queries for updating the relation on groups and flashcards
+  database/ingroup.js: Queries for updating the relation on groups and flashcards
 */
 
 const con = require('../database.js').connection;
