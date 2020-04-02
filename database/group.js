@@ -55,6 +55,16 @@ module.exports = {
       [uid], returnRow);
   },
 
+  /*  allGroups :: ( -> List<GroupRow>)
+      Get all the groups in the system */
+  allGroups: (cb) => {
+    con.query(
+      `SELECT 
+        g.*, 
+        u.name AS owner_name 
+      FROM groups g JOIN users u ON g.owner_uid = u.uid;`, cb);
+  },
+
   /*  addGroup :: (name :: String, userUID :: Number -> GroupRow)
       Adds a new group of flashcards to the database, returning the row */
   addGroup: (name, userUID, cb) => {
@@ -109,6 +119,11 @@ module.exports = {
 module.exports.getGroup(5, (err, group) => {
   console.log(err);
   console.log(group);
+});
+
+module.exports.allGroups((err, rows) => {
+  console.log(err);
+  console.log(rows);
 });
 
 module.exports.addGroup("NEW GROUP", 1, (err, row) => {

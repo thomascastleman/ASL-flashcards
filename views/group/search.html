@@ -1,30 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Search Flashcards | {{defaults.sysName}}</title>
+  <title>Search Groups | {{defaults.sysName}}</title>
   <link rel="stylesheet" type="text/css" href="css/reset.css">
   <link rel="stylesheet" type="text/css" href="css/defaults.css">
   <link rel="stylesheet" type="text/css" href="css/navbar.css">
   <script>
     // taken from: https://www.w3schools.com/howto/howto_js_filter_table.asp
-    function filterCards() {
+    function filterGroups() {
       // Declare variables
-      var input, filter, table, tr, td, i, txtValue, tds, gloss, definition;
+      var input, filter, table, tr, td, i, txtValue, tds, groupName;
       input = document.getElementById("search-bar");
       filter = input.value.toUpperCase();
-      table = document.getElementById("flashcards-table");
+      table = document.getElementById("groups-table");
       tr = table.getElementsByTagName("tr");
 
       // Loop through all table rows, and hide those who don't match the search query
       for (i = 0; i < tr.length; i++) {
         tds = tr[i].getElementsByTagName("td");
-        gloss = tds[0];
-        definition = tds[1];
+        groupName = tds[0];
 
-        if (gloss && definition) {
-          // search gloss and definition
-          txtValue = gloss.textContent || gloss.innerText;
-          txtValue += " " + (definition.textContent || definition.innerText);
+        if (groupName) {
+          txtValue = groupName.textContent || groupName.innerText;
           if (txtValue.toUpperCase().indexOf(filter) > -1) {
             tr[i].style.display = "";
           } else {
@@ -50,21 +47,19 @@
     </ul>
   </div>
   <div class="container">
-    <h1>Search Flashcards</h1>
-    <input id="search-bar" type="text" placeholder="Search glosses and definitions..." autocomplete="off" onkeyup="filterCards();">
-    <table id="flashcards-table">
+    <h1>Search Groups</h1>
+    <input id="search-bar" type="text" placeholder="Search groups..." autocomplete="off" onkeyup="filterGroups();">
+    <table id="groups-table">
       <tr>
-        <th>Gloss</th>
-        <th>Definition</th>
-        <th>Video</th>
+        <th>Group</th>
+        <th>Creator</th>
       </tr>
-      {{#flashcards}}
+      {{#groups}}
         <tr>
-          <td><a href="/flashcard/{{uid}}">{{gloss}}</a></td>
-          <td>{{definition}}</td>
-          <td><a href="{{{video}}}">{{{video}}}</a></td>
+          <td><a href="/group/{{uid}}">{{name}}</a></td>
+          <td>{{owner_name}}</td>
         </tr>
-      {{/flashcards}}
+      {{/groups}}
     </table>
   </div>
 </body>

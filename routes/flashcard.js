@@ -18,6 +18,21 @@ const flashcardFields = Joi.object({
 
 module.exports = (app) => {
 
+  // gets all cards and renders search interface (it's a table)
+  app.get('/flashcard/search', mid.isAuth, (req, res) => {
+    const renderSearchPage = (err, flashcards) => {
+      if (err) return res.error({
+        r: err,
+        fr: 'Failed to retrieve all flashcards for search'
+      });
+
+      res.rend('flashcard/search.html', { flashcards });
+    }
+
+    // retrieve all cards for searching
+    cardCtrl.allFlashcards(renderSearchPage)
+  });
+
   // interface for creating a new card
   app.get('/flashcard/create', mid.isAuth, (req, res) => {
     res.rend('flashcard/create.html');

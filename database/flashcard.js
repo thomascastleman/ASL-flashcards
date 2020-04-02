@@ -32,6 +32,12 @@ module.exports = {
       [uid], returnRow);
   },
 
+  /*  allFlashcards :: ( -> List<FlashcardRow>)
+      Get all the flashcards in the system */
+  allFlashcards: (cb) => {
+    con.query('SELECT * FROM flashcards;', cb);
+  },
+
   /*  addFlashcard :: (gloss :: String, definition :: String, video :: String 
                       -> FlashcardRow)
       Adds a new flashcard to the database, returning the row */
@@ -91,6 +97,11 @@ module.exports = {
 module.exports.getFlashcard(100, (err, row) => {
   console.log(err);
   console.log(row);
+});
+
+module.exports.allFlashcards((err, rows) => {
+  console.log(err);
+  console.log(rows);
 });
 
 module.exports.addFlashcard('GLOSS', 'Test definition', 

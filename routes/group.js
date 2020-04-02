@@ -16,6 +16,21 @@ const groupFields = Joi.object({
 
 module.exports = (app) => {
 
+  // gets all groups and renders search interface (it's a table)
+  app.get('/group/search', mid.isAuth, (req, res) => {
+    const renderSearchPage = (err, groups) => {
+      if (err) return res.error({
+        r: err,
+        fr: 'Failed to retrieve all groups for search'
+      });
+
+      res.rend('group/search.html', { groups });
+    }
+
+    // retrieve all groups for searching
+    groupCtrl.allGroups(renderSearchPage)
+  });
+
   // interface for creating a new group
   app.get('/group/create', mid.isAuth, (req, res) => {
     res.rend('group/create.html');
