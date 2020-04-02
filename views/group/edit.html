@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit a Group | {{defaults.sysName}}</title>
+  <link rel="stylesheet" type="text/css" href="css/reset.css">
+  <link rel="stylesheet" type="text/css" href="css/defaults.css">
+  <link rel="stylesheet" type="text/css" href="css/navbar.css">
+</head>
+<body>
+  <div class="navbar">
+    <ul>
+      <li><a href="/">{{defaults.sysName}}</a></li>
+      <div style="float:right">
+        {{^defaults.isAuth}}
+          <li><a href="/auth/google">Log In</a></li>
+        {{/defaults.isAuth}}
+        {{#defaults.isAuth}}
+          <li><a href="/logout">Log Out</a></li>
+        {{/defaults.isAuth}}
+      </div>
+    </ul>
+  </div>
+  <div class="container">
+    <h1>Edit a Group</h1>
+    <form action="/group/edit/{{uid}}" method="POST">
+      <input name="name" type="text" autocomplete="off" placeholder="Group Name" value="{{name}}"><br>
+      <input type="submit">
+    </form>
+
+    <form action="/group/delete/{{uid}}" method="POST">
+      <input value="Delete Group" type="submit">
+    </form>
+  </div>
+</body>
+</html>

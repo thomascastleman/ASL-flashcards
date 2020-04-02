@@ -24,12 +24,10 @@ module.exports = {
         return cb(new Error("Failed to find a group with the given identifier"));
       }
 
-      //cb(err, rows[0]);
       let group = rows[0];
       
       const addCardsToGroup = (err, rows) => {
         if (err) return cb(err);
-
         if (!rows) return cb(new Error("Failed to retrieve rows associated with indicated group"));
 
         // add cards to the group object and return
@@ -46,9 +44,14 @@ module.exports = {
 
     }
 
-    // get the group metadata
+    // get the group metadata (and join to include owner's name)
     con.query(
-      `SELECT * FROM groups WHERE uid = ?;`, 
+      `SELECT 
+        g.*,
+        u.name AS owner_name
+      FROM 
+        groups g JOIN users u ON g.owner_uid = u.uid
+      WHERE g.uid = ?;`, 
       [uid], returnRow);
   },
 

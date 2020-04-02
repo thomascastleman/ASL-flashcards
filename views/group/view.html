@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{name}} | Flashcard Group | {{defaults.sysName}}</title>
+  <link rel="stylesheet" type="text/css" href="css/reset.css">
+  <link rel="stylesheet" type="text/css" href="css/defaults.css">
+  <link rel="stylesheet" type="text/css" href="css/navbar.css">
+</head>
+<body>
+  <div class="navbar">
+    <ul>
+      <li><a href="/">{{defaults.sysName}}</a></li>
+      <div style="float:right">
+        {{^defaults.isAuth}}
+          <li><a href="/auth/google">Log In</a></li>
+        {{/defaults.isAuth}}
+        {{#defaults.isAuth}}
+          <li><a href="/logout">Log Out</a></li>
+        {{/defaults.isAuth}}
+      </div>
+    </ul>
+  </div>
+  <div class="container">
+    <h1>{{name}}</h1>
+    <h4>Created by {{owner_name}}</h4>
+    {{#hasCards}}
+      <p>Flashcards in this group:</p>
+      <table>
+        <tr>
+          <th>Gloss</th>
+          <th>Video</th>
+        </tr>
+        {{#flashcards}}
+          <tr>
+            <td><a href="/flashcard/{{uid}}">{{gloss}}</a></td>
+            <td><video src="{{{video}}}" type="video/mp4" controls autoplay width="200"></video></td>
+          </tr>
+        {{/flashcards}}
+      </table>
+    {{/hasCards}}
+    {{^hasCards}}
+      <p>There aren't any flashcards in this group yet!</p>
+    {{/hasCards}}
+    {{#isOwner}}
+      <a href="/group/edit/{{uid}}">Edit this group (it's yours)</a>
+    {{/isOwner}}
+  </div>
+</body>
+</html>
