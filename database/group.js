@@ -4,6 +4,7 @@
 */
 
 const con = require('../database.js').connection;
+const sys = require('../settings.js');
 
 module.exports = {
 
@@ -127,8 +128,9 @@ module.exports = {
       FROM 
         groups g JOIN users u ON g.owner_uid = u.uid
       WHERE MATCH (g.name) AGAINST (? IN BOOLEAN MODE) 
-      ORDER BY termScore DESC`,
-      [expandedQuery, expandedQuery], cb);
+      ORDER BY termScore DESC
+      LIMIT ?;`,
+      [expandedQuery, expandedQuery, sys.SEARCH.GROUP_QUERY_LIMIT], cb);
   }
 
 }

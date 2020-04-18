@@ -4,6 +4,7 @@
 */
 
 const con = require('../database.js').connection;
+const sys = require('../settings.js');
 
 module.exports = {
 
@@ -106,8 +107,9 @@ module.exports = {
         MATCH (gloss) AGAINST (? IN BOOLEAN MODE) AS termScore
       FROM flashcards 
       WHERE MATCH (gloss, definition) AGAINST (? IN BOOLEAN MODE) 
-      ORDER BY termScore DESC`,
-      [expandedQuery, expandedQuery], cb);
+      ORDER BY termScore DESC
+      LIMIT ?;`,
+      [expandedQuery, expandedQuery, sys.SEARCH.CARD_QUERY_LIMIT], cb);
   }
 }
 

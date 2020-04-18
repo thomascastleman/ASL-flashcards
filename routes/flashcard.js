@@ -37,7 +37,8 @@ module.exports = (app) => {
 
       res.rend('flashcard/search.html', {
         flashcards,
-        hasCardResults: flashcards.length > 0
+        hasCardResults: flashcards.length > 0,
+        query: req.body.query
       });
     }
 

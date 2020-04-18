@@ -71,6 +71,7 @@ const auth = require('./auth.js')(app, passport);
 const routes = require('./routes/routes.js')(app);
 const flashcardRoutes = require('./routes/flashcard.js')(app);
 const groupRoutes = require('./routes/group.js')(app);
+const quizRoutes = require('./routes/quiz.js')(app);
 
 // unhandled routes redirect to home
 app.get('*', (req, res) => { res.redirect('/'); });

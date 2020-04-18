@@ -26,6 +26,12 @@ module.exports = {
   EMAIL_RESTRICTION: /.+?@brown\.edu$/gm,
 
   // name of this system
-  SYSTEM_NAME: 'ASL Flashcard System'
+  SYSTEM_NAME: 'ASL Flashcard System',
+
+  // search-related constants
+  SEARCH: {
+    CARD_QUERY_LIMIT: 50, // max number of flashcard search results
+    GROUP_QUERY_LIMIT: 50 // max number of group results
+  }
 
 }
