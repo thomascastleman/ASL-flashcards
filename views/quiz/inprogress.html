@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quizzing | {{defaults.sysName}}</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/reset.css">
+  <link rel="stylesheet" type="text/css" href="css/defaults.css">
+  <link rel="stylesheet" type="text/css" href="css/navbar.css">
+  <script>
+    // register whether or not the user was accurate with this card
+    function updateAccuracy(correct) {
+      const update = {
+        cardUID: {{card.uid}},
+        correct
+      };
+
+      // POST update, move to next card if successful
+      $.post("/quiz/updateAccuracy", update)
+        .done((data) => {
+          if (data.err) {
+            alert("An error occurred updating accuracy for this card. Please skip instead. Error: " + data.err);
+          } else {
+            toNextCard();
+          }
+        });
+    }
+
+    // skip any accuracy updates
+    function toNextCard() {
+      $('#params-form').submit();
+    }
+  </script>
+</head>
+<body>
+  <div class="navbar">
+    <ul>
+      <li><a href="/">{{defaults.sysName}}</a></li>
+      <div style="float:right">
+        {{^defaults.isAuth}}
+          <li><a href="/auth/google">Log In</a></li>
+        {{/defaults.isAuth}}
+        {{#defaults.isAuth}}
+          <li><a href="/logout">Log Out</a></li>
+        {{/defaults.isAuth}}
+      </div>
+    </ul>
+  </div>
+  <div class="container">
+
+    {{#showGloss}}
+      <p>What's the sign for: {{card.gloss}}</p>
+    {{/showGloss}}
+    {{^showGloss}}
+      
+    {{/showGloss}}
+
+    <form id="params-form" action="/quiz/inprogress" method="POST">
+      <div hidden>
+        <input name="selection_style" value="{{params.selection_style}}">
+        <input name="prompting" value="{{params.prompting}}">
+        <input name="which_to_study" value="{{params.which_to_study}}">
+        <input name="card_pool" value="{{params.card_pool}}">
+      </div>
+    </form>
+
+    <div>
+      <button onclick="updateAccuracy(true);">I was right</button>
+      <button onclick="updateAccuracy(false);">I was wrong</button>
+      <button onclick="toNextCard();">Skip</button>
+    </div>
+
+    <a href="/quiz">Choose different quiz parameters</a>
+  </div>
+</body>
+</html>

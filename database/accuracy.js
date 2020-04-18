@@ -11,7 +11,7 @@ module.exports = {
       Creates accuracy measurements for this user for every card 
       in the given list (so we can later update them without 
       questioning their pre-existence) */
-  initializeAccuracies: (userUID, flashcardUIDs, cb) => {
+  initializeAccuracies: (userUID, initAll, flashcardUIDs, cb) => {
     const handleExistingAcc = (err, rows) => {
       if (err) return cb(err);
 
@@ -38,10 +38,18 @@ module.exports = {
         [insert], cb);
     }
 
-    con.query(
-      `SELECT flashcard_uid FROM accuracy 
-      WHERE user_uid = ? AND flashcard_uid IN (?);`,
-      [userUID, flashcardUIDs], handleExistingAcc);
+    // if initialize accuracy of this user with ALL cards, don't restrict to a subset
+    if (initAll) {
+      con.query(
+        `SELECT flashcard_uid FROM accuracy 
+        WHERE user_uid = ?;`,
+        [userUID], handleExistingAcc);
+    } else {
+      con.query(
+        `SELECT flashcard_uid FROM accuracy 
+        WHERE user_uid = ? AND flashcard_uid IN (?);`,
+        [userUID, flashcardUIDs], handleExistingAcc);
+    }
   },
 
   /*  updateAccuracy :: (userUID :: Number, flashcard :: Number,
@@ -62,7 +70,7 @@ module.exports = {
 // Tests
 /*
 
-module.exports.initializeAccuracies(5, [4, 18, 100, 6, 7], (err) => {
+module.exports.initializeAccuracies(5, false, [4, 18, 100, 6, 7], (err) => {
   console.log(err);
 });
 

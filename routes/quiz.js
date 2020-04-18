@@ -7,6 +7,7 @@ const mid         = require('../middleware.js');
 const cardCtrl    = require('../database/flashcard.js');
 const groupCtrl   = require('../database/group.js');
 const quizCtrl    = require('../database/quiz.js');
+const accCtrl     = require('../database/accuracy.js');
 const Joi         = require('joi');
 const vld         = require('express-joi-validation').createValidator({});
 
@@ -23,6 +24,11 @@ const inProgressSchema = Joi.object({
   prompting: Joi.string().valid('gloss_first', 'sign_first').required(),
   which_to_study: Joi.string().valid('all_cards', 'by_group').required(),
   card_pool: Joi.string().allow('').optional()
+});
+
+const accuracySchema = Joi.object({
+  cardUID: Joi.number().integer().required(),
+  correct: Joi.boolean().required()
 });
 
 module.exports = (app) => {
@@ -79,7 +85,21 @@ module.exports = (app) => {
         which_to_study: req.body.which_to_study
       };
 
-      res.rend('quiz/confirmation.html', { params });
+      // once accuracies have been initialized for all cards, show confirmation
+      const accuraciesInitialized = (err) => {
+        if (err) return res.error({
+          r: err,
+          fr: 'Failed to initialize accuracies'
+        });
+  
+        res.rend('quiz/confirmation.html', { params });
+      }
+
+      accCtrl.initializeAccuracies(
+        req.user.local.uid, 
+        true,
+        [],
+        accuraciesInitialized);
 
     } else if (req.body.which_to_study == "by_group") {
       // need to parse which groups are being included
@@ -110,7 +130,22 @@ module.exports = (app) => {
           card_pool: uidString
         };
 
-        res.rend('quiz/confirmation.html', { params });
+        // once accuracies have been initialized for all cards, show confirmation
+        const accuraciesInitialized = (err) => {
+          if (err) return res.error({
+            r: err,
+            fr: 'Failed to initialize accuracies'
+          });
+    
+          res.rend('quiz/confirmation.html', { params });
+        }
+
+        // initialize accuracies just for these cards
+        accCtrl.initializeAccuracies(
+          req.user.local.uid, 
+          false,
+          uidString.split(',').map(s => parseInt(s, 10)),
+          accuraciesInitialized);
       }
 
       // get the UID string for cards in this group union
@@ -124,7 +159,66 @@ module.exports = (app) => {
 
   // given quiz parameters, select a card to show the user
   app.post('/quiz/inprogress', mid.isAuth, vld.body(inProgressSchema), (req, res) => {
-    res.send(req.body);
+    /*
+        {
+          selection_style: 'random' | 'accuracy-based',
+          prompting: 'gloss_first' | 'sign_first',
+          which_to_study: 'by_group' | 'all_cards',
+          card_pool: '<potentially a very long string>' | ''
+        }
+
+        Here's how this gonna work:
+          Get the list of cards (with accuracies) to choose from (quizCtrl.getCardsToChooseFrom)
+          Choose a card, either randomly or accuracy-based (quizCtrl.chooseCard)
+
+          Render 'quiz/inprogress.html' with {
+            params: req.body,
+            card: the card we chose
+            showGloss: prompting == 'gloss_first' (just make this a boolean for mustache)
+          }
+    */
+    const selectCard = (err, cards) => {
+      if (err) return res.error({
+        r: err,
+        fr: 'Failed to get all flashcards in the study group'
+      });
+
+      // render the quiz page with the chosen cards
+      const render = (chosenCard) => {
+
+        console.log(chosenCard);
+
+        res.rend('quiz/inprogress.html', {
+          params: req.body,
+          card: chosenCard,
+          showGloss: req.body.prompting == 'gloss_first'  // boolean for mustache
+        });
+      }
+
+      // choose a card at random (or by accuracy)
+      quizCtrl.chooseCard(
+        req.body.selection_style == 'accuracy-based',
+        cards,
+        render);
+    }
+
+    // get all flashcard rows from the pool (and their accuracy info)
+    quizCtrl.getCardsToChooseFrom(
+      req.body.which_to_study == 'by_group',
+      req.body.card_pool,
+      req.user.local.uid,
+      selectCard);
+  });
+
+  // API for updating a user's accuracy with a given card
+  app.post('/quiz/updateAccuracy', mid.isAuth, vld.body(accuracySchema), (req, res) => {
+
+    // ------------ WRITE THIS 
+
+
+    res.send({
+      err: null
+    })
   });
 
 }

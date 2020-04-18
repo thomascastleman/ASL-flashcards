@@ -3,10 +3,5 @@ Minor:
 - add wildcard on end of every word in search queries?
 
 Quiz:
-- write quizzing system
-
-Aggregating all cards from a set of groups:
-
-  Select the in_group table, join on flashcards ()
-  where group_uid in the set (restrict to groups in this set)
-  group by flashcard uid (remove flashcard duplicates)
+- updating accuracy backend
+- frontend for in-progress quiz
