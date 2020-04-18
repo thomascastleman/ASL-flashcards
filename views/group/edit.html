@@ -2,9 +2,31 @@
 <html>
 <head>
   <title>Edit a Group | {{defaults.sysName}}</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
   <link rel="stylesheet" type="text/css" href="css/reset.css">
   <link rel="stylesheet" type="text/css" href="css/defaults.css">
   <link rel="stylesheet" type="text/css" href="css/navbar.css">
+
+  <script>
+    // make ajax request to add card to group
+    function addToGroup(cardUID, gloss, definition) {
+      alert("Adding card " + cardUID);
+
+      $.post("/group/addCard", { cardUID, groupUID: {{group.uid}} })
+        .done((data) => {
+          if (data.err) {
+            alert("An error occurred adding the card: " + data.err);
+          } else {
+            // add the <tr> to #cards-in-group
+          }
+        });
+    }
+
+    // make ajax request to remove a card from the group
+    function removeFromGroup(cardUID) {
+      alert("Removing " + cardUID + " from group");
+    }
+  </script>
 </head>
 <body>
   <div class="navbar">
@@ -21,13 +43,62 @@
     </ul>
   </div>
   <div class="container">
-    <h1>Edit a Group</h1>
-    <form action="/group/edit/{{uid}}" method="POST">
-      <input name="name" type="text" autocomplete="off" placeholder="Group Name" value="{{name}}"><br>
-      <input type="submit">
+    <h1>Edit Group</h1>
+    <h3>Change Name</h3>
+    <form action="/group/edit/updateName/{{group.uid}}" method="POST">
+      <input name="name" type="text" autocomplete="off" placeholder="Group Name" value="{{group.name}}"><br>
+      <input type="submit" value="Update Name">
     </form>
 
-    <form action="/group/delete/{{uid}}" method="POST">
+    <h3>Search for cards to add</h3>
+    <!-- Search results -->
+    <form action="/group/edit/{{group.uid}}/search" method="POST">
+      <input type="text" name="query" placeholder="Search for flashcards..." value="{{query}}">
+      <input type="submit" value="Search">
+    </form>
+    {{#hasSearchResults}}
+    <table>
+      <tr>
+        <th>Add</th>
+        <th>Gloss</th>
+        <th>Definition</th>
+      </tr>
+      {{#searchResults}}
+        <tr>
+          <td onclick="addToGroup({{uid}}, '{{gloss}}', '{{definition}}');">Add to Group</td>
+          <td><a href="/flashcard/{{uid}}">{{gloss}}</a></td>
+          <td>{{definition}}</td>
+        </tr>
+      {{/searchResults}}
+    </table>
+    {{/hasSearchResults}}
+    {{^hasSearchResults}}
+    <p>No search results.</p>
+    {{/hasSearchResults}}
+
+    <!-- Cards that are already in the group -->
+    <h3>Cards in this Group</h3>
+    {{#hasCardsInGroup}}
+    <table id="cards-in-group">
+      <tr>
+        <th>Remove</th>
+        <th>Gloss</th>
+        <th>Definition</th>
+      </tr>
+      {{#group.flashcards}}
+        <tr id="in-group-{{uid}}">
+          <td onclick="removeFromGroup({{uid}});">Remove</td>
+          <td><a href="/flashcard/{{uid}}">{{gloss}}</a></td>
+          <td>{{definition}}</td>
+        </tr>
+      {{/group.flashcards}}
+    </table>
+    {{/hasCardsInGroup}}
+    {{^hasCardsInGroup}}
+    <p>There are no cards in this group.</p>
+    {{/hasCardsInGroup}}
+
+    <form action="/group/delete/{{group.uid}}" method="POST">
       <input value="Delete Group" type="submit">
     </form>
   </div>

@@ -5,7 +5,7 @@
   <link rel="stylesheet" type="text/css" href="css/reset.css">
   <link rel="stylesheet" type="text/css" href="css/defaults.css">
   <link rel="stylesheet" type="text/css" href="css/navbar.css">
-  <script>
+  <!-- <script>
     // taken from: https://www.w3schools.com/howto/howto_js_filter_table.asp
     function filterCards() {
       // Declare variables
@@ -33,7 +33,7 @@
         }
       }
     }
-  </script>
+  </script> -->
 </head>
 <body>
   <div class="navbar">
@@ -51,21 +51,28 @@
   </div>
   <div class="container">
     <h1>Search Flashcards</h1>
-    <input id="search-bar" type="text" placeholder="Search glosses and definitions..." autocomplete="off" onkeyup="filterCards();">
+    <form action="/flashcard/search" method="POST">
+      <input id="search-bar" name="query" type="text" placeholder="Search glosses and definitions..." autocomplete="off">
+      <input type="submit" value="Search">
+    </form>
+    
+    {{#hasCardResults}}
     <table id="flashcards-table">
       <tr>
         <th>Gloss</th>
         <th>Definition</th>
-        <th>Video</th>
       </tr>
       {{#flashcards}}
         <tr>
           <td><a href="/flashcard/{{uid}}">{{gloss}}</a></td>
           <td>{{definition}}</td>
-          <td><a href="{{{video}}}">{{{video}}}</a></td>
         </tr>
       {{/flashcards}}
     </table>
+    {{/hasCardResults}}
+    {{^hasCardResults}}
+    <p>No search results.</p>
+    {{/hasCardResults}}
   </div>
 </body>
 </html>

@@ -109,6 +109,26 @@ module.exports = {
       Deletes a group from the groups table, by UID */
   deleteGroup: (uid, cb) => {
     con.query('DELETE FROM groups WHERE uid = ?;', [uid], cb);
+  },
+
+  /*  searchGroups :: (query :: String -> List<GroupRow>)
+      Search for groups whose names match the query */
+  searchGroups: (query, cb) => {
+    // add wildcard to end of query to expand
+    let expandedQuery = query == "" ? query : query + "*";
+
+    /* Run the search query */
+    con.query(`
+      SELECT 
+        g.uid, 
+        g.name,
+        u.name AS owner_name,
+        MATCH (g.name) AGAINST (? IN BOOLEAN MODE) AS termScore
+      FROM 
+        groups g JOIN users u ON g.owner_uid = u.uid
+      WHERE MATCH (g.name) AGAINST (? IN BOOLEAN MODE) 
+      ORDER BY termScore DESC`,
+      [expandedQuery, expandedQuery], cb);
   }
 
 }
@@ -138,6 +158,11 @@ module.exports.editGroup(3, "New Group Name", (err, row) => {
 
 module.exports.deleteGroup(4, (err, row) => {
   console.log(err);
+});
+
+module.exports.searchGroups('AUT', (err, results) => {
+  console.log(err);
+  console.log(results);
 });
 
 */

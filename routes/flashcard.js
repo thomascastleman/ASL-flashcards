@@ -16,21 +16,33 @@ const flashcardFields = Joi.object({
   video: Joi.string().required()
 });
 
+const searchFields = Joi.object({
+  query: Joi.string()
+});
+
 module.exports = (app) => {
 
-  // gets all cards and renders search interface (it's a table)
+  // renders search interface for flashcards
   app.get('/flashcard/search', mid.isAuth, (req, res) => {
+    res.rend('flashcard/search.html');
+  });
+
+  // get search results for a query
+  app.post('/flashcard/search', mid.isAuth, vld.body(searchFields), (req, res) => {
     const renderSearchPage = (err, flashcards) => {
       if (err) return res.error({
         r: err,
-        fr: 'Failed to retrieve all flashcards for search'
+        fr: 'Failed to retrieve flashcard search results'
       });
 
-      res.rend('flashcard/search.html', { flashcards });
+      res.rend('flashcard/search.html', {
+        flashcards,
+        hasCardResults: flashcards.length > 0
+      });
     }
 
-    // retrieve all cards for searching
-    cardCtrl.allFlashcards(renderSearchPage)
+    // run search query
+    cardCtrl.searchFlashcards(req.body.query, renderSearchPage);
   });
 
   // interface for creating a new card

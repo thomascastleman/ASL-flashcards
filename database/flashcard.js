@@ -87,6 +87,27 @@ module.exports = {
   deleteFlashcard: (uid, cb) => {
     // just run the query
     con.query('DELETE FROM flashcards WHERE uid = ?;', [uid], cb)
+  },
+
+  /*  searchFlashcards :: (query :: String -> List<FlashcardRow>)
+      Search for flashcards whose glosses/definitions are related 
+      to the given query string */
+  searchFlashcards: (query, cb) => {
+    // add wildcard to end of query to expand
+    let expandedQuery = query == "" ? query : query + "*";
+
+    /* Run the search query (score by match with gloss, but include 
+      results that match against definitions as well) */
+    con.query(`
+      SELECT 
+        uid, 
+        gloss, 
+        definition, 
+        MATCH (gloss) AGAINST (? IN BOOLEAN MODE) AS termScore
+      FROM flashcards 
+      WHERE MATCH (gloss, definition) AGAINST (? IN BOOLEAN MODE) 
+      ORDER BY termScore DESC`,
+      [expandedQuery, expandedQuery], cb);
   }
 }
 
@@ -118,6 +139,11 @@ module.exports.editFlashcard(1, 'UPDATED GLOSS', 'new definition', 'new video',
 
 module.exports.deleteFlashcard(2, (err) => {
   console.log(err);
+});
+
+module.exports.searchFlashcards("est", (err, results) => {
+  console.log(err);
+  console.log(results);
 });
 
 */

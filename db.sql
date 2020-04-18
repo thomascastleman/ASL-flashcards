@@ -33,6 +33,10 @@ CREATE TABLE flashcards (
   PRIMARY KEY (uid)
 );
 
+-- create index on gloss & definition, as well as just gloss
+CREATE FULLTEXT INDEX glossDefnIndex ON flashcards(gloss, definition);
+CREATE FULLTEXT INDEX glossIndex ON flashcards(gloss);
+
 -- groups of flashcards
 CREATE TABLE groups (
   uid INT NOT NULL AUTO_INCREMENT,
@@ -41,6 +45,9 @@ CREATE TABLE groups (
   PRIMARY KEY (uid),
   FOREIGN KEY (owner_uid) REFERENCES users (uid)
 );
+
+-- create index on group name
+CREATE FULLTEXT INDEX groupIndex ON groups(name);
 
 -- relation on flashcards and groups: is flashcard f in group g?
 CREATE TABLE in_group (

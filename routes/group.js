@@ -3,10 +3,12 @@
   routes/group.js: Routes related to updating groups of cards
 */
 
-const mid       = require('../middleware.js');
-const groupCtrl  = require('../database/group.js');
-const Joi       = require('joi');
-const vld       = require('express-joi-validation').createValidator({});
+const mid         = require('../middleware.js');
+const groupCtrl   = require('../database/group.js');
+const inGroupCtrl = require('../database/ingroup.js');
+const cardCtrl    = require('../database/flashcard.js');
+const Joi         = require('joi');
+const vld         = require('express-joi-validation').createValidator({});
 
 // Validation Schemas
 
@@ -14,21 +16,51 @@ const groupFields = Joi.object({
   name: Joi.string().required()
 });
 
+const searchFields = Joi.object({
+  query: Joi.string()
+});
+
+const addRemoveCard = Joi.object({
+  cardUID: Joi.number().integer(),
+  groupUID: Joi.number().integer()
+});
+
 module.exports = (app) => {
 
-  // gets all groups and renders search interface (it's a table)
+  // renders search interface for groups
   app.get('/group/search', mid.isAuth, (req, res) => {
+    const renderWithAllGroups = (err, groups) => {
+      if (err) return res.error({
+        r: err,
+        fr: 'Failed to retrieve group search results'
+      });
+
+      res.rend('group/search.html', {
+        groups,
+        hasGroupResults: groups.length > 0
+      })
+    }
+
+    // default to showing all groups
+    groupCtrl.allGroups(renderWithAllGroups);
+  });
+
+  // get search results for a query
+  app.post('/group/search', mid.isAuth, vld.body(searchFields), (req, res) => {
     const renderSearchPage = (err, groups) => {
       if (err) return res.error({
         r: err,
-        fr: 'Failed to retrieve all groups for search'
+        fr: 'Failed to retrieve group search results'
       });
 
-      res.rend('group/search.html', { groups });
+      res.rend('group/search.html', {
+        groups,
+        hasGroupResults: groups.length > 0
+      });
     }
 
-    // retrieve all groups for searching
-    groupCtrl.allGroups(renderSearchPage)
+    // run search query
+    groupCtrl.searchGroups(req.body.query, renderSearchPage);
   });
 
   // interface for creating a new group
@@ -74,24 +106,64 @@ module.exports = (app) => {
         ti: 'Back to group page'
       });
 
-      res.rend('group/edit.html', group);
+      res.rend('group/edit.html', {
+        group,
+        hasCardsInGroup: group.flashcards.length > 0
+      });
+    });
+  });
+
+  // search for flashcards while editing a group
+  app.post('/group/edit/:uid/search', mid.isAuth, vld.body(searchFields), (req, res) => {
+    // get the current fields
+    groupCtrl.getGroup(req.params.uid, (err, group) => {
+      if (err) return res.err({
+        r: err, 
+        fr: 'Failed to find group.'
+      });
+
+      // check permissions
+      if (req.user.local.uid != group.owner_uid) return res.err({
+        fr: 'You are unable to edit this group (you do not own it)',
+        li: `/group/${group.uid}`,
+        ti: 'Back to group page'
+      });
+
+      const renderWithSearchResults = (err, flashcards) => {
+        if (err) return res.err({
+          r: err,
+          fr: 'Failed to search for flashcards to add to this group'
+        });
+
+        // render group edit page, but with flashcard search results
+        res.rend('group/edit.html', {
+          group,
+          hasCardsInGroup: group.flashcards.length > 0,
+          query: req.body.query,
+          searchResults: flashcards,
+          hasSearchResults: flashcards.length > 0
+        });
+      }
+
+      // search for flashcards based on their query
+      cardCtrl.searchFlashcards(req.body.query, renderWithSearchResults);
     });
   });
 
   // edit an existing group
-  app.post('/group/edit/:uid', mid.isAuth, vld.body(groupFields), (req, res) => {
+  app.post('/group/edit/updateName/:uid', mid.isAuth, vld.body(groupFields), (req, res) => {
     const renderGroupPage = (err, groupRow) => {
       if (err) return res.err({ 
         r: err, 
-        fr: 'Failed to edit your group.', 
+        fr: 'Failed to update your group name.', 
         li: `/group/edit/${req.params.uid}`,
         ti: 'Try editing again'
       });
 
       res.rend('message.html', {
-        title: 'Edited group!',
+        title: 'Updated group name!',
         header: 'Congrats!',
-        message: 'Your group was edited!',
+        message: 'Your group name was edited!',
         link: `/group/${groupRow.uid}`,
         linkTitle: 'View it here!'
       });
@@ -154,5 +226,32 @@ module.exports = (app) => {
         message: 'Your group was deleted!'
       });
     });
+  });
+
+
+
+
+
+
+  // ------------------- CHECK PERMISSIONS ON THESE -------------------------------
+
+  // add a flashcard to a group
+  app.post('/group/addCard', mid.isAuth, vld.body(addRemoveCard), (req, res) => {
+    const handle = (err) => {
+      res.send({ err });
+    }
+
+    // add card to group in DB
+    inGroupCtrl.addCardToGroup(req.body.cardUID, req.body.groupUID, handle);
+  });
+
+  // remove a flashcard from a group
+  app.post('/group/removeCard', mid.isAuth, vld.body(addRemoveCard), (req, res) => {
+    const handle = (err) => {
+      res.send({ err });
+    }
+
+    // remove card from group in DB
+    inGroupCtrl.removeCardFromGroup(req.body.cardUID, req.body.groupUID, handle);
   });
 }
