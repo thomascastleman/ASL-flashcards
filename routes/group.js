@@ -228,30 +228,49 @@ module.exports = (app) => {
     });
   });
 
-
-
-
-
-
-  // ------------------- CHECK PERMISSIONS ON THESE -------------------------------
-
   // add a flashcard to a group
   app.post('/group/addCard', mid.isAuth, vld.body(addRemoveCard), (req, res) => {
-    const handle = (err) => {
-      res.send({ err });
+    // first, determine that this user can edit this group
+    const checkPermissions = (err, group) => {
+      if (err) res.send({ err });
+
+      // check permission
+      if (req.user.local.uid != group.owner_uid) res.send({ 
+        err: "You do not have permission to add cards to this group." 
+      });
+
+      const handle = (err) => {
+        res.send({ err });
+      }
+
+      // allow addition of card
+      inGroupCtrl.addCardToGroup(req.body.cardUID, req.body.groupUID, handle);  
     }
 
-    // add card to group in DB
-    inGroupCtrl.addCardToGroup(req.body.cardUID, req.body.groupUID, handle);
+    // start by getting the group info to check edit permission
+    groupCtrl.getGroup(req.body.groupUID, checkPermissions);
   });
 
   // remove a flashcard from a group
   app.post('/group/removeCard', mid.isAuth, vld.body(addRemoveCard), (req, res) => {
-    const handle = (err) => {
-      res.send({ err });
+    // first, determine that this user can edit this group
+    const checkPermissions = (err, group) => {
+      if (err) res.send({ err });
+
+      // check permission
+      if (req.user.local.uid != group.owner_uid) res.send({ 
+        err: "You do not have permission to remove cards from this group." 
+      });
+
+      const handle = (err) => {
+        res.send({ err });
+      }
+
+      // allow removal of card from group in DB
+      inGroupCtrl.removeCardFromGroup(req.body.cardUID, req.body.groupUID, handle);  
     }
 
-    // remove card from group in DB
-    inGroupCtrl.removeCardFromGroup(req.body.cardUID, req.body.groupUID, handle);
+    // start by getting the group info to check edit permission
+    groupCtrl.getGroup(req.body.groupUID, checkPermissions);
   });
 }
