@@ -29,6 +29,15 @@
     function toNextCard() {
       $('#params-form').submit();
     }
+
+    $(document).ready(() => {
+      $('#show-answer').click(() => {
+        $('#answer-container').toggle();
+        let vid = document.getElementById('answer-video')
+        vid.currentTime = 0;
+        vid.play();
+      });
+    });
   </script>
 </head>
 <body>
@@ -49,9 +58,13 @@
 
     {{#showGloss}}
       <p>What's the sign for: {{card.gloss}}</p>
+      <button id="show-answer">Show Answer</button>
+      <div id="answer-container" hidden>
+        <video id="answer-video" src="{{{card.video}}}" width="400" controls></video>
+      </div>
     {{/showGloss}}
     {{^showGloss}}
-      
+
     {{/showGloss}}
 
     <form id="params-form" action="/quiz/inprogress" method="POST">
