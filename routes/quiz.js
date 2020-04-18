@@ -185,9 +185,6 @@ module.exports = (app) => {
 
       // render the quiz page with the chosen cards
       const render = (chosenCard) => {
-
-        console.log(chosenCard);
-
         res.rend('quiz/inprogress.html', {
           params: req.body,
           card: chosenCard,
@@ -212,13 +209,16 @@ module.exports = (app) => {
 
   // API for updating a user's accuracy with a given card
   app.post('/quiz/updateAccuracy', mid.isAuth, vld.body(accuracySchema), (req, res) => {
+    const respond = (err) => {
+      res.send({ err });
+    }
 
-    // ------------ WRITE THIS 
-
-
-    res.send({
-      err: null
-    })
+    // apply accuracy update to DB
+    accCtrl.updateAccuracy(
+      req.user.local.uid, 
+      req.body.cardUID, 
+      req.body.correct,
+      respond);
   });
 
 }
