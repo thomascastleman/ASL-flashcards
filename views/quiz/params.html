@@ -13,6 +13,20 @@
       $("#check-all").change(() => {
         $("input:checkbox.group-check").prop('checked', $('#check-all').prop('checked'));
       });
+
+      // hide group selection UI when "all cards" is checked
+      $('input[type=radio][name=which_to_study]').change(() => {
+        const studyMode = $('input[name="which_to_study"]:checked').val();
+
+        if (studyMode == 'all_cards') {
+          $('#group-selector').hide();
+        }
+        else if (studyMode == 'by_group') {
+          $('#group-selector').show();
+        }
+      });
+
+      $('#group-selector').hide();
     });
   </script>
 </head>
@@ -37,39 +51,50 @@
     <form action="/quiz/start" method="POST">
       <!-- random or accuracy-weighted -->
       <h3>Card Selection Style</h3>
-      <input type="radio" id="accuracy-based" name="selection-style" value="accuracy-based" checked>
+      <input type="radio" id="accuracy-based" name="selection_style" value="accuracy-based" checked>
       <label for="accuracy-based" 
         title="Cards are presented based on how accurately you've responded in the past, 
         and how frequently you've viewed them.">Accuracy-based</label><br>
-      <input type="radio" id="random" name="selection-style" value="random">
+      <input type="radio" id="random" name="selection_style" value="random">
       <label for="random"
         title="Cards are presented at random, regardless of previous accuracy.">Random</label><br>
 
-      <!-- choosing groups -->
-      <h3>Groups to Include in Quiz</h3>
-      <p>
-        <input type="checkbox" id="check-all"> Include All
-      </p>
+      <!-- which cards to study -->
+      <h3>Cards to Study</h3>
+      <input type="radio" id="all_cards" name="which_to_study" value="all_cards" checked>
+      <label for="all_cards" 
+        title="Every flashcard in the system can be selected">All Cards</label><br>
+      <input type="radio" id="by_group" name="which_to_study" value="by_group">
+      <label for="by_group"
+        title="Cards are selected from a set of groups">By Group</label><br>
 
-      {{#hasGroups}}
-      <table>
-        <tr>
-          <th></th>
-          <th>Group</th>
-          <th>Creator</th>
-        </tr>
-        {{#groups}}
-        <tr>
-          <td><input class="group-check" name="include-group-{{uid}}" type="checkbox"></td>
-          <td>{{name}}</td>
-          <td>{{owner_name}}</td>
-        </tr>
-        {{/groups}}
-      </table>
-      {{/hasGroups}}
-      {{^hasGroups}}
-      <p>There are no groups to choose from.</p>
-      {{/hasGroups}}
+      <div id="group-selector">
+        <!-- choosing groups -->
+        <h3>Groups to Include in Quiz</h3>
+        <p>
+          <input type="checkbox" id="check-all"> Include All
+        </p>
+
+        {{#hasGroups}}
+        <table>
+          <tr>
+            <th></th>
+            <th>Group</th>
+            <th>Creator</th>
+          </tr>
+          {{#groups}}
+          <tr>
+            <td><input class="group-check" name="include-group-{{uid}}" type="checkbox"></td>
+            <td>{{name}}</td>
+            <td>{{owner_name}}</td>
+          </tr>
+          {{/groups}}
+        </table>
+        {{/hasGroups}}
+        {{^hasGroups}}
+        <p>There are no groups to choose from.</p>
+        {{/hasGroups}}
+      </div>
 
       <input type="submit" value="Start Quiz">
     </form>
