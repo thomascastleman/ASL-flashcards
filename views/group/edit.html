@@ -18,6 +18,13 @@
             alert("An error occurred adding the card: " + data.err);
           } else {
             // add the <tr> to #cards-in-group
+            $('#cards-in-group > tbody:last-child').append(`
+              <tr id="in-group-${cardUID}">
+                <td onclick="removeFromGroup(${cardUID});">Remove</td>
+                <td><a href="/flashcard/${cardUID}">${gloss}</a></td>
+                <td>${definition}</td>
+              </tr>`
+            ); 
           }
         });
     }
@@ -25,6 +32,17 @@
     // make ajax request to remove a card from the group
     function removeFromGroup(cardUID) {
       alert("Removing " + cardUID + " from group");
+
+      $.post("/group/removeCard", { cardUID, groupUID: {{group.uid}} })
+        .done((data) => {
+          if (data.err) {
+            alert("An error occurred removing the card: " + data.err);
+          } else {
+            // remove the <tr> from #cards-in-group
+            let rowToRemove = document.getElementById(`in-group-${cardUID}`);
+            rowToRemove && rowToRemove.parentNode.removeChild(rowToRemove);
+          }
+        });
     }
   </script>
 </head>
@@ -44,6 +62,7 @@
   </div>
   <div class="container">
     <h1>Edit Group</h1>
+    <a href="/group/{{group.uid}}">Back to viewing group</a>
     <h3>Change Name</h3>
     <form action="/group/edit/updateName/{{group.uid}}" method="POST">
       <input name="name" type="text" autocomplete="off" placeholder="Group Name" value="{{group.name}}"><br>
