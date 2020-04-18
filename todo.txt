@@ -1,0 +1,7 @@
+
+Minor:
+- check permissions on add/remove cards from group (backend)
+- add wildcard on end of every word in search queries?
+
+Quiz:
+- write quizzing system
