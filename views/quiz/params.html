@@ -48,7 +48,7 @@
     <h1>Choose Quiz Parameters</h1>
 
     <!-- form for paraemeter selection -->
-    <form action="/quiz/start" method="POST">
+    <form action="/quiz/setup" method="POST">
       <!-- random or accuracy-weighted -->
       <h3>Card Selection Style</h3>
       <input type="radio" id="accuracy-based" name="selection_style" value="accuracy-based" checked>
@@ -58,6 +58,15 @@
       <input type="radio" id="random" name="selection_style" value="random">
       <label for="random"
         title="Cards are presented at random, regardless of previous accuracy.">Random</label><br>
+
+      <!-- how to prompt -->
+      <h3>Prompting</h3>
+      <input type="radio" id="sign_first" name="prompting" value="sign_first" checked>
+      <label for="sign_first"
+        title="User will be prompted with the sign video, with the gloss/definition hidden.">Show Sign</label><br>
+      <input type="radio" id="gloss_first" name="prompting" value="gloss_first">
+      <label for="gloss_first"
+        title="User will be prompted with the sign gloss, with the video hidden.">Show Gloss</label><br>
 
       <!-- which cards to study -->
       <h3>Cards to Study</h3>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Confirmation | {{defaults.sysName}}</title>
+  <link rel="stylesheet" type="text/css" href="css/reset.css">
+  <link rel="stylesheet" type="text/css" href="css/defaults.css">
+  <link rel="stylesheet" type="text/css" href="css/navbar.css">
+</head>
+<body>
+  <div class="navbar">
+    <ul>
+      <li><a href="/">{{defaults.sysName}}</a></li>
+      <div style="float:right">
+        {{^defaults.isAuth}}
+          <li><a href="/auth/google">Log In</a></li>
+        {{/defaults.isAuth}}
+        {{#defaults.isAuth}}
+          <li><a href="/logout">Log Out</a></li>
+        {{/defaults.isAuth}}
+      </div>
+    </ul>
+  </div>
+  <div class="container">
+    <h1>Confirmation</h1>
+    <form action="/quiz/inprogress" method="POST">
+      <div hidden>
+        <input name="selection_style" value="{{params.selection_style}}">
+        <input name="prompting" value="{{params.prompting}}">
+        <input name="which_to_study" value="{{params.which_to_study}}">
+        <input name="card_pool" value="{{params.card_pool}}">
+      </div>
+      <input type="submit" value="Start Quiz"><br>
+      <a href="/quiz">Choose quiz parameters again</a>
+    </form>
+  </div>
+</body>
+</html>
