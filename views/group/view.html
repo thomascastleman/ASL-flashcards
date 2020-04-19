@@ -24,16 +24,17 @@
     <h1>{{name}}</h1>
     <h4>Created by {{owner_name}}</h4>
     {{#hasCards}}
-      <p>Flashcards in this group:</p>
       <table>
         <tr>
           <th>Gloss</th>
           <th>Video</th>
+          <th>Your Accuracy</th>
         </tr>
         {{#flashcards}}
           <tr>
             <td><a href="/flashcard/{{uid}}">{{gloss}}</a></td>
-            <td><video src="{{{video}}}" type="video/mp4" controls autoplay width="200"></video></td>
+            <td><video src="{{{video}}}" type="video/mp4" controls width="200"></video></td>
+            <td>{{accuracy.percentage}}% ({{accuracy.correct}} / {{accuracy.total}})</td>
           </tr>
         {{/flashcards}}
       </table>

@@ -2,6 +2,12 @@
 Minor:
 - add wildcard on end of every word in search queries?
 
-Quiz:
-- updating accuracy backend
-- frontend for in-progress quiz
+Confirmation messages on dangerous things
+- delete flashcard
+- delete group
+- removing card from group
+
+Style:
+- navbar
+- extremely lightweight, basic style
+- overflow scroll for search on group edit page

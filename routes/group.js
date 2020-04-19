@@ -7,6 +7,7 @@ const mid         = require('../middleware.js');
 const groupCtrl   = require('../database/group.js');
 const inGroupCtrl = require('../database/ingroup.js');
 const cardCtrl    = require('../database/flashcard.js');
+const accCtrl     = require('../database/accuracy.js');
 const Joi         = require('joi');
 const vld         = require('express-joi-validation').createValidator({});
 
@@ -208,7 +209,17 @@ module.exports = (app) => {
       // register if the group has any flashcards in it
       group.hasCards = group.flashcards.length > 0;
 
-      res.rend('group/view.html', group);
+      const addAccuracies = (err, cardUIDToAccuracy) => {
+        let acc;
+        for (let i = 0; i < group.flashcards.length; i++) {
+          acc = cardUIDToAccuracy[group.flashcards[i].uid];
+          group.flashcards[i].accuracy = acc;
+        }
+
+        res.rend('group/view.html', group);
+      }
+
+      accCtrl.accuraciesForGroup(group.uid, req.user.local.uid, addAccuracies);
     });
   });
 

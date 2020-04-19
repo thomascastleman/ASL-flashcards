@@ -63,6 +63,42 @@ module.exports = {
       `UPDATE accuracy SET correct = correct + ?, total = total + 1
       WHERE user_uid = ? AND flashcard_uid = ?;`,
       [delta, userUID, flashcardUID], cb);
+  },
+
+  /*  accuraciesForGroup :: (groupUID :: Number, userUID :: Number ->
+                            Map:UID -> Accuracy)
+      Get the accuracies for all cards in a given group for a given user. */
+  accuraciesForGroup: (groupUID, userUID, cb) => {
+    parseAccuracies = (err, accs) => {
+      if (err) return cb(err);
+
+      let a, cardUIDToAccuracy = {};
+
+      // make null values 0 and compute percent accuracy for each card
+      for (let i = 0; i < accs.length; i++) {
+        a = accs[i];
+
+        a.correct = a.correct ? a.correct : 0;
+        a.total = a.total ? a.total : 0;
+        a.percentage = (a.total ? (a.correct / a.total) * 100 : 0).toFixed(2);  // percent accuracy
+
+        cardUIDToAccuracy[a.flashcard_uid] = a;
+      }
+
+      return cb(err, cardUIDToAccuracy);
+    }
+
+    con.query(`
+      SELECT
+        ig.flashcard_uid,
+        a.correct,
+        a.total
+      FROM
+        in_group ig LEFT JOIN accuracy a ON 
+        ig.flashcard_uid = a.flashcard_uid
+        AND a.user_uid = ?
+      WHERE ig.group_uid = ?;`,
+      [userUID, groupUID], parseAccuracies);
   }
 
 }
@@ -76,6 +112,11 @@ module.exports.initializeAccuracies(5, false, [4, 18, 100, 6, 7], (err) => {
 
 module.exports.updateAccuracy(10, 255, true, (err) => {
   console.log(err);
+});
+
+module.exports.accuraciesForGroup(35, 21, (err, accs) => {
+  console.log(err);
+  console.log(accs);
 });
 
 */
