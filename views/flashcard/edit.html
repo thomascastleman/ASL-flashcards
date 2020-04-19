@@ -29,7 +29,7 @@
       <input type="submit">
     </form>
 
-    <form action="/flashcard/delete/{{uid}}" method="POST">
+    <form action="/flashcard/delete/{{uid}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this flashcard?');">
       <input value="Delete Flashcard" type="submit">
     </form>
   </div>

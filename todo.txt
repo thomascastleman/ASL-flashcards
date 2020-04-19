@@ -2,11 +2,6 @@
 Minor:
 - add wildcard on end of every word in search queries?
 
-Confirmation messages on dangerous things
-- delete flashcard
-- delete group
-- removing card from group
-
 Style:
 - navbar
 - extremely lightweight, basic style
