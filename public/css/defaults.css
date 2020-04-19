@@ -8,3 +8,13 @@
 * {
   font-family: 'PT Sans', sans-serif;
 }
+
+.container {
+  width: 70%;
+  margin: auto;
+}
+
+/* table-related stuffs */
+td, th {
+  padding: 5px;
+}

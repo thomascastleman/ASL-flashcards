@@ -2,11 +2,13 @@
 <html>
 <head>
   <title>Edit a Group | {{defaults.sysName}}</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" 
+  integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="css/reset.css">
-  <link rel="stylesheet" type="text/css" href="css/defaults.css">
-  <link rel="stylesheet" type="text/css" href="css/navbar.css">
-
+  <link rel="stylesheet" type="text/css" href="/css/reset.css">
+  <link rel="stylesheet" type="text/css" href="/css/defaults.css">
+  <link rel="stylesheet" type="text/css" href="/css/navbar.css">
+  <link rel="stylesheet" type="text/css" href="/css/group/edit.css">
   <script>
     // make ajax request to add card to group
     function addToGroup(cardUID, gloss, definition) {
@@ -21,7 +23,7 @@
               //$('#cards-in-group > tbody:last-child').append(`
               $('#cards-in-group').append(`
                 <tr id="in-group-${cardUID}">
-                  <td onclick="removeFromGroup(${cardUID});">Remove</td>
+                  <td onclick="removeFromGroup(${cardUID});"><i class="fas fa-minus-circle"></i></td>
                   <td><a href="/flashcard/${cardUID}">${gloss}</a></td>
                   <td>${definition}</td>
                 </tr>`
@@ -67,31 +69,33 @@
     <a href="/group/{{group.uid}}">Back to viewing group</a>
     <h3>Change Name</h3>
     <form action="/group/edit/updateName/{{group.uid}}" method="POST">
-      <input name="name" type="text" autocomplete="off" placeholder="Group Name" value="{{group.name}}"><br>
+      <input name="name" size="35" type="text" autocomplete="off" placeholder="Group Name" value="{{group.name}}"><br>
       <input type="submit" value="Update Name">
     </form>
 
     <h3>Search for cards to add</h3>
     <!-- Search results -->
     <form action="/group/edit/{{group.uid}}/search" method="POST">
-      <input type="text" name="query" placeholder="Search for flashcards..." value="{{query}}">
+      <input type="text" name="query" size="40" placeholder="Search for flashcards..." value="{{query}}">
       <input type="submit" value="Search">
     </form>
     {{#hasSearchResults}}
-    <table>
-      <tr>
-        <th>Add</th>
-        <th>Gloss</th>
-        <th>Definition</th>
-      </tr>
-      {{#searchResults}}
+    <div class="search-results-container">
+      <table>
         <tr>
-          <td onclick="addToGroup({{uid}}, '{{gloss}}', '{{definition}}');">Add to Group</td>
-          <td><a href="/flashcard/{{uid}}">{{gloss}}</a></td>
-          <td>{{definition}}</td>
+          <th>Add</th>
+          <th>Gloss</th>
+          <th>Definition</th>
         </tr>
-      {{/searchResults}}
-    </table>
+        {{#searchResults}}
+          <tr>
+            <td onclick="addToGroup({{uid}}, '{{gloss}}', '{{definition}}');"><i class="fas fa-plus-circle"></i></td>
+            <td><a href="/flashcard/{{uid}}">{{gloss}}</a></td>
+            <td>{{definition}}</td>
+          </tr>
+        {{/searchResults}}
+      </table>
+    </div>
     {{/hasSearchResults}}
     {{^hasSearchResults}}
     <p>No search results.</p>
@@ -107,7 +111,7 @@
       </tr>
       {{#group.flashcards}}
         <tr id="in-group-{{uid}}">
-          <td onclick="removeFromGroup({{uid}});">Remove</td>
+          <td onclick="removeFromGroup({{uid}});"><i class="fas fa-minus-circle"></i></td>
           <td><a href="/flashcard/{{uid}}">{{gloss}}</a></td>
           <td>{{definition}}</td>
         </tr>

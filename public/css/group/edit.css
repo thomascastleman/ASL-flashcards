@@ -1,0 +1,10 @@
+
+
+.search-results-container {
+  height: 300px;
+  overflow: scroll;
+}
+
+table {
+  width: 600px;
+}

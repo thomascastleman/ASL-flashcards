@@ -10,8 +10,8 @@ const mid   = require('../middleware.js');
 module.exports = function(app) {
 
   // for debug, show user session
-  app.get('/', (req, res) => {
-    res.send(req.user || "There is no session established for this user.");
+  app.get('/', mid.isAuth, (req, res) => {
+    res.rend('home.html');
   });
 
 }

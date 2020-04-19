@@ -5,4 +5,4 @@ Minor:
 Style:
 - navbar
 - extremely lightweight, basic style
-- overflow scroll for search on group edit page
+- fontawesome icons for adding/removing cards on edit group page

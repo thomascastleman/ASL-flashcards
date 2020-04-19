@@ -2,9 +2,9 @@
 <html>
 <head>
   <title>Edit a Flashcard | {{defaults.sysName}}</title>
-  <link rel="stylesheet" type="text/css" href="css/reset.css">
-  <link rel="stylesheet" type="text/css" href="css/defaults.css">
-  <link rel="stylesheet" type="text/css" href="css/navbar.css">
+  <link rel="stylesheet" type="text/css" href="/css/reset.css">
+  <link rel="stylesheet" type="text/css" href="/css/defaults.css">
+  <link rel="stylesheet" type="text/css" href="/css/navbar.css">
 </head>
 <body>
   <div class="navbar">
@@ -23,9 +23,9 @@
   <div class="container">
     <h1>Edit a Flashcard</h1>
     <form action="/flashcard/edit/{{uid}}" method="POST">
-      <input name="gloss" type="text" autocomplete="off" placeholder="Gloss" value="{{gloss}}"><br>
-      <textarea name="definition" type="text" autocomplete="off" placeholder="Definition">{{definition}}</textarea><br>
-      <input name="video" type="text" autocomplete="off" placeholder="Video URL" value="{{video}}"><br>
+      <input name="gloss" size="35" type="text" autocomplete="off" placeholder="Gloss" value="{{gloss}}"><br>
+      <textarea name="definition" rows="6" cols="50" type="text" autocomplete="off" placeholder="Definition">{{definition}}</textarea><br>
+      <input name="video" size="75" type="text" autocomplete="off" placeholder="Video URL" value="{{video}}"><br>
       <input type="submit">
     </form>
 

@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Sample Page | {{defaults.sysName}}</title>
+  <title>Home | {{defaults.sysName}}</title>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" 
   integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="/css/reset.css">
   <link rel="stylesheet" type="text/css" href="/css/defaults.css">
   <link rel="stylesheet" type="text/css" href="/css/navbar.css">
+  <link rel="stylesheet" type="text/css" href="/css/home.css">
 </head>
 <body>
   <div class="navbar">
@@ -23,7 +24,18 @@
     </ul>
   </div>
   <div class="container">
-    <!-- Page Content Here -->
+    <h1>ASL Flashcard System</h1>
+    <a href="/quiz">Quiz!</a>
+    <br><br>
+    
+    <div class="half-container">
+      <a href="/group/search">Search Groups</a><br>
+      <a href="/group/create">Create a new group</a>
+    </div>
+    <div class="half-container">
+      <a href="/flashcard/search">Search Flashcards</a><br>
+      <a href="/flashcard/create">Create a new flashcard</a>
+    </div>
   </div>
 </body>
 </html>
