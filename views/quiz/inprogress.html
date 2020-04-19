@@ -33,9 +33,12 @@
     $(document).ready(() => {
       $('#show-answer').click(() => {
         $('#answer-container').toggle();
+
+        {{#showGloss}}
         let vid = document.getElementById('answer-video')
         vid.currentTime = 0;
         vid.play();
+        {{/showGloss}}
       });
     });
   </script>
@@ -64,7 +67,14 @@
       </div>
     {{/showGloss}}
     {{^showGloss}}
-
+      <p>What does this sign mean?</p>
+      <video src="{{{card.video}}}" width="400" controls autoplay></video>
+      <br>
+      <button id="show-answer">Show Answer</button>
+      <div id="answer-container" hidden>
+        <p>{{card.gloss}}</p>
+        <p>{{card.definition}}</p>
+      </div>
     {{/showGloss}}
 
     <form id="params-form" action="/quiz/inprogress" method="POST">
