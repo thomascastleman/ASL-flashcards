@@ -5,11 +5,13 @@
   <link rel="stylesheet" type="text/css" href="/css/reset.css">
   <link rel="stylesheet" type="text/css" href="/css/defaults.css">
   <link rel="stylesheet" type="text/css" href="/css/navbar.css">
+  <link rel="stylesheet" type="text/css" href="/css/flashcard/view.css">
 </head>
 <body>
   <div class="navbar">
     <ul>
       <li><a href="/">{{defaults.sysName}}</a></li>
+      <li><a href="/quiz">Quiz</a></li>
       <div style="float:right">
         {{^defaults.isAuth}}
           <li><a href="/auth/google">Log In</a></li>
@@ -22,10 +24,12 @@
   </div>
   <div class="container">
     <h1>{{gloss}}</h1>
-    <p>{{definition}}</p>
+    <p id="defn">{{definition}}</p>
     <video src="{{{video}}}" controls autoplay></video>
     <br>
-    <a href="/flashcard/edit/{{uid}}">Edit this flashcard</a>
+    <div id="edit">
+      <a href="/flashcard/edit/{{uid}}">Edit this flashcard</a>
+    </div>
   </div>
 </body>
 </html>

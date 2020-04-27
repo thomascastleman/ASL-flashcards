@@ -5,37 +5,12 @@
   <link rel="stylesheet" type="text/css" href="/css/reset.css">
   <link rel="stylesheet" type="text/css" href="/css/defaults.css">
   <link rel="stylesheet" type="text/css" href="/css/navbar.css">
-  <!-- <script>
-    // taken from: https://www.w3schools.com/howto/howto_js_filter_table.asp
-    function filterGroups() {
-      // Declare variables
-      var input, filter, table, tr, td, i, txtValue, tds, groupName;
-      input = document.getElementById("search-bar");
-      filter = input.value.toUpperCase();
-      table = document.getElementById("groups-table");
-      tr = table.getElementsByTagName("tr");
-
-      // Loop through all table rows, and hide those who don't match the search query
-      for (i = 0; i < tr.length; i++) {
-        tds = tr[i].getElementsByTagName("td");
-        groupName = tds[0];
-
-        if (groupName) {
-          txtValue = groupName.textContent || groupName.innerText;
-          if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            tr[i].style.display = "";
-          } else {
-            tr[i].style.display = "none";
-          }
-        }
-      }
-    }
-  </script> -->
 </head>
 <body>
   <div class="navbar">
     <ul>
       <li><a href="/">{{defaults.sysName}}</a></li>
+      <li><a href="/quiz">Quiz</a></li>
       <div style="float:right">
         {{^defaults.isAuth}}
           <li><a href="/auth/google">Log In</a></li>
@@ -49,7 +24,7 @@
   <div class="container">
     <h1>Search Groups</h1>
     <form action="/group/search" method="POST">
-      <input id="search-bar" name="query" type="text" placeholder="Search groups..." autocomplete="off">
+      <input id="search-bar" name="query" type="text" placeholder="Search groups..." autocomplete="off" size="45">
       <input type="submit" value="Search">
     </form>
     

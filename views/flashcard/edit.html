@@ -2,14 +2,18 @@
 <html>
 <head>
   <title>Edit a Flashcard | {{defaults.sysName}}</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" 
+  integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="/css/reset.css">
   <link rel="stylesheet" type="text/css" href="/css/defaults.css">
   <link rel="stylesheet" type="text/css" href="/css/navbar.css">
+  <link rel="stylesheet" type="text/css" href="/css/flashcard/edit.css">
 </head>
 <body>
   <div class="navbar">
     <ul>
       <li><a href="/">{{defaults.sysName}}</a></li>
+      <li><a href="/quiz">Quiz</a></li>
       <div style="float:right">
         {{^defaults.isAuth}}
           <li><a href="/auth/google">Log In</a></li>
@@ -23,12 +27,13 @@
   <div class="container">
     <h1>Edit a Flashcard</h1>
     <form action="/flashcard/edit/{{uid}}" method="POST">
-      <input name="gloss" size="35" type="text" autocomplete="off" placeholder="Gloss" value="{{gloss}}"><br>
-      <textarea name="definition" rows="6" cols="50" type="text" autocomplete="off" placeholder="Definition">{{definition}}</textarea><br>
-      <input name="video" size="75" type="text" autocomplete="off" placeholder="Video URL" value="{{video}}"><br>
+      <input name="gloss" size="40" type="text" autocomplete="off" placeholder="Gloss" value="{{gloss}}"><br>
+      <textarea name="definition" rows="4" cols="50" type="text" autocomplete="off" placeholder="Definition">{{definition}}</textarea><br>
+      <input name="video" size="65" type="text" autocomplete="off" placeholder="Video URL" value="{{video}}"><br>
       <input type="submit">
     </form>
 
+    <h3 id="danger"><i class="fas fa-exclamation-triangle"></i> Danger</h3>
     <form action="/flashcard/delete/{{uid}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this flashcard?');">
       <input value="Delete Flashcard" type="submit">
     </form>

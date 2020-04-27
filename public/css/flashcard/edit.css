@@ -1,0 +1,9 @@
+
+input, textarea {
+  margin-bottom: 20px;
+}
+
+#danger {
+  margin-top: 200px;
+  color: red;
+}

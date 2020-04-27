@@ -5,11 +5,13 @@
   <link rel="stylesheet" type="text/css" href="/css/reset.css">
   <link rel="stylesheet" type="text/css" href="/css/defaults.css">
   <link rel="stylesheet" type="text/css" href="/css/navbar.css">
+  <link rel="stylesheet" type="text/css" href="/css/quiz/confirmation.css">
 </head>
 <body>
   <div class="navbar">
     <ul>
       <li><a href="/">{{defaults.sysName}}</a></li>
+      <li><a href="/quiz">Quiz</a></li>
       <div style="float:right">
         {{^defaults.isAuth}}
           <li><a href="/auth/google">Log In</a></li>
@@ -30,7 +32,9 @@
         <input name="card_pool" value="{{params.card_pool}}">
       </div>
       <input type="submit" value="Start Quiz"><br>
-      <a href="/quiz">Choose quiz parameters again</a>
+      <div id="params-link">
+        <a href="/quiz">Choose quiz parameters again</a>
+      </div>
     </form>
   </div>
 </body>

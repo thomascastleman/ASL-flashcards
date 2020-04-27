@@ -31,7 +31,7 @@ module.exports = (app) => {
   // renders search interface for groups
   app.get('/group/search', mid.isAuth, (req, res) => {
     const renderWithAllGroups = (err, groups) => {
-      if (err) return res.error({
+      if (err) return res.err({
         r: err,
         fr: 'Failed to retrieve group search results'
       });
@@ -49,7 +49,7 @@ module.exports = (app) => {
   // get search results for a query
   app.post('/group/search', mid.isAuth, vld.body(searchFields), (req, res) => {
     const renderSearchPage = (err, groups) => {
-      if (err) return res.error({
+      if (err) return res.err({
         r: err,
         fr: 'Failed to retrieve group search results'
       });

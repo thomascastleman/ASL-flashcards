@@ -35,7 +35,7 @@ module.exports = (app) => {
 
   app.get('/quiz', mid.isAuth, (req, res) => {
     const renderWithAllGroups = (err, groups) => {
-      if (err) return res.error({
+      if (err) return res.err({
         r: err,
         fr: 'Failed to access groups for quiz parameters'
       });
@@ -87,7 +87,7 @@ module.exports = (app) => {
 
       // once accuracies have been initialized for all cards, show confirmation
       const accuraciesInitialized = (err) => {
-        if (err) return res.error({
+        if (err) return res.err({
           r: err,
           fr: 'Failed to initialize accuracies'
         });
@@ -118,9 +118,13 @@ module.exports = (app) => {
       });
 
       const sendToConfirmationPage = (err, uidString) => {
-        if (err) return res.error({
+        if (err) return res.err({
           r: err,
           fr: 'Failed to gather UIDs of all groups included in quiz'
+        });
+
+        if (!uidString) return res.err({
+          fr: 'No cards found in the groups selected'
         });
 
         const params = {
@@ -132,7 +136,7 @@ module.exports = (app) => {
 
         // once accuracies have been initialized for all cards, show confirmation
         const accuraciesInitialized = (err) => {
-          if (err) return res.error({
+          if (err) return res.err({
             r: err,
             fr: 'Failed to initialize accuracies'
           });
@@ -151,7 +155,7 @@ module.exports = (app) => {
       // get the UID string for cards in this group union
       quizCtrl.uidStringFromGroups(UIDsExtracted, sendToConfirmationPage);
     } else {
-      res.error({
+      res.err({
         fr: 'Invalid study mode: must study by group or all cards'
       });
     }
@@ -178,9 +182,13 @@ module.exports = (app) => {
           }
     */
     const selectCard = (err, cards) => {
-      if (err) return res.error({
+      if (err) return res.err({
         r: err,
         fr: 'Failed to get all flashcards in the study group'
+      });
+
+      if (cards.length == 0) return res.err({
+        fr: 'There are no flashcards in the pool to choose from.'
       });
 
       // render the quiz page with the chosen cards

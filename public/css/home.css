@@ -1,6 +1,15 @@
 
 
+.container {
+  padding-top: 50px;
+}
+
 .half-container {
   display: inline-block;
   width: 400px;
+  line-height: 25px;
+}
+
+#quiz {
+  font-size: 23px;
 }

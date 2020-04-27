@@ -12,7 +12,7 @@ module.exports = {
       in the given list (so we can later update them without 
       questioning their pre-existence) */
   initializeAccuracies: (userUID, initAll, flashcardUIDs, cb) => {
-    const handleExistingAcc = (err, rows) => {
+    const handleExistingAcc = (err, rows, pool) => {
       if (err) return cb(err);
 
       if (!rows) {
@@ -24,7 +24,7 @@ module.exports = {
       const existingCards = rows.map(r => r.flashcard_uid);
 
       // which cards do we need to initialize an accuracy for
-      const cardsToInit = flashcardUIDs.filter(
+      const cardsToInit = pool.filter(
           uid => !existingCards.includes(uid)
         );
 
@@ -40,15 +40,26 @@ module.exports = {
 
     // if initialize accuracy of this user with ALL cards, don't restrict to a subset
     if (initAll) {
-      con.query(
-        `SELECT flashcard_uid FROM accuracy 
-        WHERE user_uid = ?;`,
-        [userUID], handleExistingAcc);
+      // get every card's UID
+      con.query(`SELECT uid FROM flashcards;`, (err, flashcards) => {
+        if (err) return cb(err);
+
+        const pool = flashcards.map(card => card.uid);  // extract list of UIDs
+
+        con.query(
+          `SELECT flashcard_uid FROM accuracy 
+          WHERE user_uid = ?;`,
+          [userUID], (err, rows) => {
+            handleExistingAcc(err, rows, pool)
+          });
+      });
     } else {
       con.query(
         `SELECT flashcard_uid FROM accuracy 
         WHERE user_uid = ? AND flashcard_uid IN (?);`,
-        [userUID, flashcardUIDs], handleExistingAcc);
+        [userUID, flashcardUIDs], (err, rows) => {
+          handleExistingAcc(err, rows, flashcardUIDs);
+        });
     }
   },
 

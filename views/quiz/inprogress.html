@@ -6,6 +6,7 @@
   <link rel="stylesheet" type="text/css" href="/css/reset.css">
   <link rel="stylesheet" type="text/css" href="/css/defaults.css">
   <link rel="stylesheet" type="text/css" href="/css/navbar.css">
+  <link rel="stylesheet" type="text/css" href="/css/quiz/inprogress.css">
   <script>
     // register whether or not the user was accurate with this card
     function updateAccuracy(correct) {
@@ -33,6 +34,7 @@
     $(document).ready(() => {
       $('#show-answer').click(() => {
         $('#answer-container').toggle();
+        $('#feedback').toggle();
 
         {{#showGloss}}
         let vid = document.getElementById('answer-video')
@@ -47,6 +49,7 @@
   <div class="navbar">
     <ul>
       <li><a href="/">{{defaults.sysName}}</a></li>
+      <li><a href="/quiz">Quiz</a></li>
       <div style="float:right">
         {{^defaults.isAuth}}
           <li><a href="/auth/google">Log In</a></li>
@@ -58,22 +61,23 @@
     </ul>
   </div>
   <div class="container">
+    <a id="params-link" href="/quiz">Choose different quiz parameters</a>
 
     {{#showGloss}}
-      <p>What's the sign for: {{card.gloss}}</p>
+      <h3>What's the sign for: {{card.gloss}}</h3>
       <button id="show-answer">Show Answer</button>
       <div id="answer-container" hidden>
-        <video id="answer-video" src="{{{card.video}}}" width="400" controls></video>
+        <video id="answer-video" src="{{{card.video}}}" width="550" controls></video>
       </div>
     {{/showGloss}}
     {{^showGloss}}
-      <p>What does this sign mean?</p>
-      <video src="{{{card.video}}}" width="400" controls autoplay></video>
+      <h3>What does this sign mean?</h3>
+      <video id="question-video" src="{{{card.video}}}" width="550" controls autoplay></video>
       <br>
       <button id="show-answer">Show Answer</button>
       <div id="answer-container" hidden>
-        <p>{{card.gloss}}</p>
-        <p>{{card.definition}}</p>
+        <p id="answer-gloss"><b>{{card.gloss}}</b></p>
+        <p id="answer-definition">{{card.definition}}</p>
       </div>
     {{/showGloss}}
 
@@ -86,13 +90,11 @@
       </div>
     </form>
 
-    <div>
+    <div id="feedback" hidden>
       <button onclick="updateAccuracy(true);">I was right</button>
       <button onclick="updateAccuracy(false);">I was wrong</button>
-      <button onclick="toNextCard();">Skip</button>
+      <button id="skip" onclick="toNextCard();">Skip</button>
     </div>
-
-    <a href="/quiz">Choose different quiz parameters</a>
   </div>
 </body>
 </html>

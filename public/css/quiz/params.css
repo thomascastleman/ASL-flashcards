@@ -1,0 +1,8 @@
+
+input[type=radio]:hover, label:hover {
+  cursor: pointer;
+}
+
+#group-selector {
+  padding-left: 40px;
+}

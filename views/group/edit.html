@@ -20,7 +20,6 @@
               alert("An error occurred adding the card: " + data.err);
             } else {
               // add the <tr> to #cards-in-group
-              //$('#cards-in-group > tbody:last-child').append(`
               $('#cards-in-group').append(`
                 <tr id="in-group-${cardUID}">
                   <td onclick="removeFromGroup(${cardUID});"><i class="fas fa-minus-circle"></i></td>
@@ -54,6 +53,7 @@
   <div class="navbar">
     <ul>
       <li><a href="/">{{defaults.sysName}}</a></li>
+      <li><a href="/quiz">Quiz</a></li>
       <div style="float:right">
         {{^defaults.isAuth}}
           <li><a href="/auth/google">Log In</a></li>
@@ -69,7 +69,7 @@
     <a href="/group/{{group.uid}}">Back to viewing group</a>
     <h3>Change Name</h3>
     <form action="/group/edit/updateName/{{group.uid}}" method="POST">
-      <input name="name" size="35" type="text" autocomplete="off" placeholder="Group Name" value="{{group.name}}"><br>
+      <input name="name" size="35" type="text" autocomplete="off" placeholder="Group Name" value="{{group.name}}">
       <input type="submit" value="Update Name">
     </form>
 
@@ -89,7 +89,7 @@
         </tr>
         {{#searchResults}}
           <tr>
-            <td onclick="addToGroup({{uid}}, '{{gloss}}', '{{definition}}');"><i class="fas fa-plus-circle"></i></td>
+            <td onclick="addToGroup({{uid}}, '{{gloss}}', '{{definition}}');"><i class="add-card fas fa-plus-circle"></i></td>
             <td><a href="/flashcard/{{uid}}">{{gloss}}</a></td>
             <td>{{definition}}</td>
           </tr>
@@ -111,7 +111,7 @@
       </tr>
       {{#group.flashcards}}
         <tr id="in-group-{{uid}}">
-          <td onclick="removeFromGroup({{uid}});"><i class="fas fa-minus-circle"></i></td>
+          <td onclick="removeFromGroup({{uid}});"><i class="remove-card fas fa-minus-circle"></i></td>
           <td><a href="/flashcard/{{uid}}">{{gloss}}</a></td>
           <td>{{definition}}</td>
         </tr>
@@ -121,6 +121,8 @@
     <p>There are no cards in this group.</p>
     {{/hasCardsInGroup}}
 
+
+    <h3 id="danger"><i class="fas fa-exclamation-triangle"></i> Danger</h3>
     <form action="/group/delete/{{group.uid}}" method="POST"  onsubmit="return confirm('Are you sure you want to delete this group?');">
       <input value="Delete Group" type="submit">
     </form>

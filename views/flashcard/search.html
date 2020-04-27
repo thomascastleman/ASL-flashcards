@@ -5,40 +5,13 @@
   <link rel="stylesheet" type="text/css" href="/css/reset.css">
   <link rel="stylesheet" type="text/css" href="/css/defaults.css">
   <link rel="stylesheet" type="text/css" href="/css/navbar.css">
-  <!-- <script>
-    // taken from: https://www.w3schools.com/howto/howto_js_filter_table.asp
-    function filterCards() {
-      // Declare variables
-      var input, filter, table, tr, td, i, txtValue, tds, gloss, definition;
-      input = document.getElementById("search-bar");
-      filter = input.value.toUpperCase();
-      table = document.getElementById("flashcards-table");
-      tr = table.getElementsByTagName("tr");
-
-      // Loop through all table rows, and hide those who don't match the search query
-      for (i = 0; i < tr.length; i++) {
-        tds = tr[i].getElementsByTagName("td");
-        gloss = tds[0];
-        definition = tds[1];
-
-        if (gloss && definition) {
-          // search gloss and definition
-          txtValue = gloss.textContent || gloss.innerText;
-          txtValue += " " + (definition.textContent || definition.innerText);
-          if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            tr[i].style.display = "";
-          } else {
-            tr[i].style.display = "none";
-          }
-        }
-      }
-    }
-  </script> -->
+  <link rel="stylesheet" type="text/css" href="/css/flashcard/search.css">
 </head>
 <body>
   <div class="navbar">
     <ul>
       <li><a href="/">{{defaults.sysName}}</a></li>
+      <li><a href="/quiz">Quiz</a></li>
       <div style="float:right">
         {{^defaults.isAuth}}
           <li><a href="/auth/google">Log In</a></li>
@@ -52,7 +25,7 @@
   <div class="container">
     <h1>Search Flashcards</h1>
     <form action="/flashcard/search" method="POST">
-      <input id="search-bar" name="query" type="text" placeholder="Search glosses and definitions..." autocomplete="off" value="{{query}}">
+      <input id="search-bar" size="65" name="query" type="text" placeholder="Search glosses and definitions..." autocomplete="off" value="{{query}}">
       <input type="submit" value="Search">
     </form>
     
@@ -71,7 +44,9 @@
     </table>
     {{/hasCardResults}}
     {{^hasCardResults}}
-    <p>No search results.</p>
+    <div id="no-results">
+      <p>No search results.</p>
+    </div>
     {{/hasCardResults}}
   </div>
 </body>

@@ -5,11 +5,13 @@
   <link rel="stylesheet" type="text/css" href="/css/reset.css">
   <link rel="stylesheet" type="text/css" href="/css/defaults.css">
   <link rel="stylesheet" type="text/css" href="/css/navbar.css">
+  <link rel="stylesheet" type="text/css" href="/css/group/create.css">
 </head>
 <body>
   <div class="navbar">
     <ul>
       <li><a href="/">{{defaults.sysName}}</a></li>
+      <li><a href="/quiz">Quiz</a></li>
       <div style="float:right">
         {{^defaults.isAuth}}
           <li><a href="/auth/google">Log In</a></li>
@@ -24,7 +26,7 @@
     <h1>Create a Group of Flashcards</h1>
     <p>You'll have a chance to add flashcards to this group once it has been created.</p>
     <form action="/group/create" method="POST">
-      <input name="name" type="text" autocomplete="off" placeholder="Group Name"><br>
+      <input name="name" type="text" autocomplete="off" placeholder="Group Name" size="40">
       <input type="submit">
     </form>
   </div>

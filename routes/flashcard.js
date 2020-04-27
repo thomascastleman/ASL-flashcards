@@ -12,7 +12,7 @@ const vld       = require('express-joi-validation').createValidator({});
 
 const flashcardFields = Joi.object({
   gloss: Joi.string().required(),
-  definition: Joi.string(),
+  definition: Joi.string().allow('').optional(),
   video: Joi.string().required()
 });
 
@@ -30,7 +30,7 @@ module.exports = (app) => {
   // get search results for a query
   app.post('/flashcard/search', mid.isAuth, vld.body(searchFields), (req, res) => {
     const renderSearchPage = (err, flashcards) => {
-      if (err) return res.error({
+      if (err) return res.err({
         r: err,
         fr: 'Failed to retrieve flashcard search results'
       });

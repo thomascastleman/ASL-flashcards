@@ -1,0 +1,30 @@
+
+#params-link {
+  float: right;
+}
+
+.container {
+  padding-top: 30px;
+}
+
+#feedback {
+  margin-top: 50px;
+}
+
+#show-answer {
+  margin-bottom: 10px;
+}
+
+/* for sign-first: */
+#question-video {
+  margin-bottom: 20px;
+}
+
+#answer-gloss {
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+
+#answer-definition {
+  width: 470px;
+}

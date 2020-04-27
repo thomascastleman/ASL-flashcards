@@ -13,6 +13,7 @@
   <div class="navbar">
     <ul>
       <li><a href="/">{{defaults.sysName}}</a></li>
+      <li><a href="/quiz">Quiz</a></li>
       <div style="float:right">
         {{^defaults.isAuth}}
           <li><a href="/auth/google">Log In</a></li>
@@ -25,7 +26,7 @@
   </div>
   <div class="container">
     <h1>ASL Flashcard System</h1>
-    <a href="/quiz">Quiz!</a>
+    <a id="quiz" href="/quiz">Quiz!</a>
     <br><br>
     
     <div class="half-container">

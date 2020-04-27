@@ -8,3 +8,16 @@
 table {
   width: 600px;
 }
+
+.add-card:hover, .remove-card:hover {
+  cursor: pointer;
+}
+
+h3 {
+  margin-top: 40px;
+}
+
+#danger {
+  margin-top: 200px;
+  color: red;
+}
