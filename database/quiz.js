@@ -80,7 +80,7 @@ module.exports = {
         // relative frequency of this card showing up in the past
         let attemptFreq = (max_attempts == 0 || c.total == 0) ? 1 : c.total / max_attempts;
 
-        // compute probability that card is selected
+        // compute probability that card is kept, given it is selected
         c.probability = (1 - accuracy) * attemptFreq;
         return c;
       });
