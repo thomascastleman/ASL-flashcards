@@ -136,6 +136,20 @@ module.exports = (app) => {
           fr: 'Failed to search for flashcards to add to this group'
         });
 
+        // make string js-safe
+        function safe(str) {
+          return str.replace(/[\'\"\\\/]/gm, function (c) {
+            return '\\' + c;
+          });
+        }
+
+        // get "safe" versions of the gloss/definition for rendering inline js through mustache
+        flashcards = flashcards.map((card) => {
+          card.js_definition = safe(card.definition);
+          card.js_gloss = safe(card.gloss);
+          return card;
+        });
+
         // render group edit page, but with flashcard search results
         res.rend('group/edit.html', {
           group,

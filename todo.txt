@@ -1,4 +1,5 @@
 
 Fixes:
 - bug with apostrophes in flashcards preventing them from being added to group
+- have empty query return ALL flashcards
 - API that constructs flashcards automatically
