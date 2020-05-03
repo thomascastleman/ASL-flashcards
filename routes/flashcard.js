@@ -20,7 +20,34 @@ const searchFields = Joi.object({
   query: Joi.string().allow('').optional()
 });
 
+const scrapeFields = Joi.object({
+  url: Joi.string().required()
+});
+
 module.exports = (app) => {
+
+  // allow user to post a URL for card scraping
+  app.get('/flashcard/scrape', mid.isAuth, (req, res) => {
+    res.rend('flashcard/scrape.html');
+  });
+
+  app.post('/flashcard/scrape', mid.isAuth, vld.body(scrapeFields), (req, res) => {
+    cardCtrl.scrapeFlashcard(req.body.url, (err, gloss, definition, video) => {
+      if (err) return res.err({
+        r: err,
+        fr: 'Failed to scrape flashcard.',
+        li: '/flashcard/create',
+        ti: 'Create it from scratch'
+      });
+
+      // render the create page with scraped data filled in
+      res.rend('flashcard/create.html', {
+        gloss,
+        definition,
+        video
+      })
+    });
+  });
 
   // renders search interface for flashcards
   app.get('/flashcard/search', mid.isAuth, (req, res) => {

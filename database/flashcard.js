@@ -166,7 +166,7 @@ module.exports = {
       definition = definition.replace(/^\n+/, ""); // remove any initial newlines
 
       // respond with scraped data
-      cb(err, gloss, video, definition);
+      cb(err, gloss, definition, video);
     });
   }
 }

@@ -13,6 +13,7 @@
       <li><a href="/">{{defaults.sysName}}</a></li>
       <li><a href="/quiz">Quiz</a></li>
       <li><a href="/flashcard/create">Add a Flashcard</a></li>
+      <li><a href="/flashcard/scrape">Scrape Flashcard</a></li>
       <div style="float:right">
         {{^defaults.isAuth}}
           <li><a href="/auth/google">Log In</a></li>
@@ -26,9 +27,9 @@
   <div class="container">
     <h1>Create a Flashcard</h1>
     <form action="/flashcard/create" method="POST">
-      <input name="gloss" type="text" autocomplete="off" placeholder="Gloss" size="40"><br>
-      <textarea name="definition" type="text" autocomplete="off" placeholder="Definition" rows="4" cols="50"></textarea><br>
-      <input name="video" type="text" autocomplete="off" placeholder="Video URL" size="65"><br>
+      <input name="gloss" type="text" autocomplete="off" placeholder="Gloss" size="40" value="{{gloss}}"><br>
+      <textarea name="definition" type="text" autocomplete="off" placeholder="Definition" rows="6" cols="60">{{definition}}</textarea><br>
+      <input name="video" type="text" autocomplete="off" placeholder="Video URL" size="65" value="{{video}}"><br>
       <p>Video URL must link directly to a video file. YouTube links will not work.</p>
       <input type="submit">
     </form>
