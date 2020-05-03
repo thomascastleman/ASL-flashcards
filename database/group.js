@@ -115,28 +115,42 @@ module.exports = {
   /*  searchGroups :: (query :: String -> List<GroupRow>)
       Search for groups whose names match the query */
   searchGroups: (query, cb) => {
-    // add wildcard to end of query to expand
-    const expandedQuery = query == "" ? query : query + "*";
-    const literalQuery = query.toUpperCase();
+    if (query == "") {
+      // return all groups
+      con.query(`
+        SELECT
+          g.uid,
+          g.name,
+          u.name AS owner_name
+        FROM 
+          groups g JOIN users u ON g.owner_uid = u.uid
+        ORDER BY g.uid DESC;`,
+      cb);
 
-    /* Run the search query */
-    con.query(`
-      SELECT 
-        g.uid, 
-        g.name,
-        u.name AS owner_name,
-        (CASE
-          WHEN UPPER(g.name) = ? THEN 1000
-          ELSE MATCH (g.name) AGAINST (? IN BOOLEAN MODE)
-        END) AS termScore
-      FROM 
-        groups g JOIN users u ON g.owner_uid = u.uid
-      WHERE 
-        UPPER(g.name) = ?
-        OR MATCH (g.name) AGAINST (? IN BOOLEAN MODE)
-      ORDER BY termScore DESC
-      LIMIT ?;`,
-      [literalQuery, expandedQuery, literalQuery, expandedQuery, sys.SEARCH.GROUP_QUERY_LIMIT], cb);
+    } else {
+      // add wildcard to end of query to expand
+      const expandedQuery = query == "" ? query : query + "*";
+      const literalQuery = query.toUpperCase();
+
+      /* Run the search query */
+      con.query(`
+        SELECT 
+          g.uid, 
+          g.name,
+          u.name AS owner_name,
+          (CASE
+            WHEN UPPER(g.name) = ? THEN 1000
+            ELSE MATCH (g.name) AGAINST (? IN BOOLEAN MODE)
+          END) AS termScore
+        FROM 
+          groups g JOIN users u ON g.owner_uid = u.uid
+        WHERE 
+          UPPER(g.name) = ?
+          OR MATCH (g.name) AGAINST (? IN BOOLEAN MODE)
+        ORDER BY termScore DESC
+        LIMIT ?;`,
+        [literalQuery, expandedQuery, literalQuery, expandedQuery, sys.SEARCH.GROUP_QUERY_LIMIT], cb);
+    }
   }
 
 }

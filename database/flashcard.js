@@ -94,31 +94,40 @@ module.exports = {
       Search for flashcards whose glosses/definitions are related 
       to the given query string */
   searchFlashcards: (query, cb) => {
-    // add wildcard to end of query to expand
-    const expandedQuery = query == "" ? query : query + "*";
+    if (query == "") {
+      // empty query returns all flashcards
+      con.query(`
+        SELECT uid, gloss, definition FROM flashcards
+        ORDER BY uid DESC;`, 
+      cb);
 
-    // also search for a literal match against the gloss
-    // some glosses are too short for fulltext indexing--so include literal matches
-    const literalQuery = query.toUpperCase();
+    } else {
+      // add wildcard to end of query to expand
+      const expandedQuery = query == "" ? query : query + "*";
 
-    /* Run the search query (score by match with gloss, but include 
-      results that match against definitions as well) */
-    con.query(`
-      SELECT 
-        uid, 
-        gloss, 
-        definition, 
-        (CASE
-          WHEN UPPER(gloss) = ? THEN 1000
-          ELSE MATCH (gloss) AGAINST (? IN BOOLEAN MODE)
-        END) AS termScore
-      FROM flashcards 
-      WHERE 
-        UPPER(gloss) = ?
-        OR MATCH (gloss, definition) AGAINST (? IN BOOLEAN MODE)
-      ORDER BY termScore DESC
-      LIMIT ?;`,
-      [literalQuery, expandedQuery, literalQuery, expandedQuery, sys.SEARCH.CARD_QUERY_LIMIT], cb);
+      // also search for a literal match against the gloss
+      // some glosses are too short for fulltext indexing--so include literal matches
+      const literalQuery = query.toUpperCase();
+
+      /* Run the search query (score by match with gloss, but include 
+        results that match against definitions as well) */
+      con.query(`
+        SELECT 
+          uid, 
+          gloss, 
+          definition, 
+          (CASE
+            WHEN UPPER(gloss) = ? THEN 1000
+            ELSE MATCH (gloss) AGAINST (? IN BOOLEAN MODE)
+          END) AS termScore
+        FROM flashcards 
+        WHERE 
+          UPPER(gloss) = ?
+          OR MATCH (gloss, definition) AGAINST (? IN BOOLEAN MODE)
+        ORDER BY termScore DESC
+        LIMIT ?;`,
+        [literalQuery, expandedQuery, literalQuery, expandedQuery, sys.SEARCH.CARD_QUERY_LIMIT], cb);
+    }
   }
 }
 
@@ -153,11 +162,6 @@ module.exports.deleteFlashcard(2, (err) => {
 });
 
 module.exports.searchFlashcards("est", (err, results) => {
-  console.log(err);
-  console.log(results);
-});
-
-module.exports.searchFlashcards("ut", (err, results) => {
   console.log(err);
   console.log(results);
 });

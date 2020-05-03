@@ -17,7 +17,7 @@ const flashcardFields = Joi.object({
 });
 
 const searchFields = Joi.object({
-  query: Joi.string()
+  query: Joi.string().allow('').optional()
 });
 
 module.exports = (app) => {

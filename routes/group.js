@@ -18,7 +18,7 @@ const groupFields = Joi.object({
 });
 
 const searchFields = Joi.object({
-  query: Joi.string()
+  query: Joi.string().allow('').optional()
 });
 
 const addRemoveCard = Joi.object({
