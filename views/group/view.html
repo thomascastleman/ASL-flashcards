@@ -5,6 +5,7 @@
   <link rel="stylesheet" type="text/css" href="/css/reset.css">
   <link rel="stylesheet" type="text/css" href="/css/defaults.css">
   <link rel="stylesheet" type="text/css" href="/css/navbar.css">
+  <link rel="stylesheet" type="text/css" href="/css/group/view.css">
 </head>
 <body>
   <div class="navbar">
@@ -25,6 +26,11 @@
   <div class="container">
     <h1>{{name}}</h1>
     <h4>Created by {{owner_name}}</h4>
+    {{#isOwner}}
+    <p id="edit-link">
+      <a href="/group/edit/{{uid}}">Edit this group (it's yours)</a>
+    </p>
+    {{/isOwner}}
     {{#hasCards}}
       <table>
         <tr>
@@ -44,10 +50,6 @@
     {{^hasCards}}
       <p>There aren't any flashcards in this group yet!</p>
     {{/hasCards}}
-    {{#isOwner}}
-      <br><br>
-      <a href="/group/edit/{{uid}}">Edit this group (it's yours)</a>
-    {{/isOwner}}
   </div>
 </body>
 </html>

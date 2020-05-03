@@ -15,6 +15,8 @@
         correct
       };
 
+      console.log(correct);
+
       // POST update, move to next card if successful
       $.post("/quiz/updateAccuracy", update)
         .done((data) => {
@@ -31,17 +33,50 @@
       $('#params-form').submit();
     }
 
+    function toggleAnswer() {
+      $('#answer-container').toggle();
+      $('#feedback').toggle();
+
+      {{#showGloss}}
+      let vid = document.getElementById('answer-video')
+      vid.currentTime = 0;
+      vid.play();
+      {{/showGloss}}
+    }
+
     $(document).ready(() => {
       $('#show-answer').click(() => {
-        $('#answer-container').toggle();
-        $('#feedback').toggle();
-
-        {{#showGloss}}
-        let vid = document.getElementById('answer-video')
-        vid.currentTime = 0;
-        vid.play();
-        {{/showGloss}}
+        toggleAnswer();
       });
+
+      // handle keyboard shortcuts
+      $(document).on("keydown", function (e) {
+        switch (e.which) {
+          // spacebar
+          case 32:
+            // if not already focused on the "show" button (which will toggle automatically)
+            if (!$("#show-answer").is(":focus")) {
+              toggleAnswer();
+            }
+            break;
+
+          // 'a' --> right
+          case 65:
+            $('#right-button').click();
+            break;
+
+          // 'f' --> wrong
+          case 70:
+          $('#wrong-button').click();
+            break;
+
+          // 'e' --> skip
+          case 69:
+          $('#skip').click();
+            break;
+        }
+      });
+
     });
   </script>
 </head>
@@ -62,7 +97,7 @@
     </ul>
   </div>
   <div class="container">
-    <a id="params-link" href="/quiz">Choose different quiz parameters</a>
+    <a id="params-link" href="/quiz">Choose different quiz parameters</a><br>
 
     {{#showGloss}}
       <h3>What's the sign for: {{card.gloss}}</h3>
@@ -92,8 +127,8 @@
     </form>
 
     <div id="feedback" hidden>
-      <button onclick="updateAccuracy(true);">I was right</button>
-      <button onclick="updateAccuracy(false);">I was wrong</button>
+      <button id="right-button" onclick="updateAccuracy(true);">I was right</button>
+      <button id="wrong-button" onclick="updateAccuracy(false);">I was wrong</button>
       <button id="skip" onclick="toNextCard();">Skip</button>
     </div>
   </div>
