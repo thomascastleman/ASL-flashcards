@@ -5,6 +5,8 @@
 
 const con = require('../database.js').connection;
 const sys = require('../settings.js');
+const request = require("request");
+const cheerio = require("cheerio");
 
 module.exports = {
 
@@ -128,9 +130,46 @@ module.exports = {
         LIMIT ?;`,
         [literalQuery, expandedQuery, literalQuery, expandedQuery, sys.SEARCH.CARD_QUERY_LIMIT], cb);
     }
+  },
+
+  /*  scrapeFlashcard :: (url :: String -> (gloss, definition, video))
+    Scrapes a flashcard from a (umm, particular) webpage */
+  scrapeFlashcard: (url, cb) => {
+    request({
+      uri: url,
+    }, (err, res, body) => {
+      if (err) return cb(err);
+
+      // parse the HTML with cheerio
+      const $ = cheerio.load(body);
+
+      // extract the gloss
+      const gloss = $('section.article > h1 > span')
+        .text()
+        .replace("ASL sign for: ", "")
+        .toUpperCase();
+
+      // extract the video
+      const path = $('#mySign').attr('src');
+      const video = "https://handspeak.com" + path;
+
+      // extract the definition
+      let definitionContent = $('section.article > p');
+      let definition = "";
+
+      for (let i = 0; i < definitionContent.length; i++) {
+        let line = definitionContent[i];
+        definition += line.children.map(ch => ch.data).join('');
+      }
+
+      definition = definition.replace(/\n{3,}/g, "\n\n"); // get rid of multi-newlines
+      definition = definition.replace(/^\n+/, ""); // remove any initial newlines
+
+      // respond with scraped data
+      cb(err, gloss, video, definition);
+    });
   }
 }
-
 
 // Tests
 /*
@@ -165,5 +204,13 @@ module.exports.searchFlashcards("est", (err, results) => {
   console.log(err);
   console.log(results);
 });
+
+module.exports.scrapeFlashcard(tests[5], (err, gloss, definition, video) => {
+  if (err) console.log(err);
+  console.log(gloss);
+  console.log(definition);
+  console.log(video);
+});
+
 
 */
