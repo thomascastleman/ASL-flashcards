@@ -116,7 +116,8 @@ module.exports = {
       Search for groups whose names match the query */
   searchGroups: (query, cb) => {
     // add wildcard to end of query to expand
-    let expandedQuery = query == "" ? query : query + "*";
+    const expandedQuery = query == "" ? query : query + "*";
+    const literalQuery = query.toUpperCase();
 
     /* Run the search query */
     con.query(`
@@ -124,13 +125,18 @@ module.exports = {
         g.uid, 
         g.name,
         u.name AS owner_name,
-        MATCH (g.name) AGAINST (? IN BOOLEAN MODE) AS termScore
+        (CASE
+          WHEN UPPER(g.name) = ? THEN 1000
+          ELSE MATCH (g.name) AGAINST (? IN BOOLEAN MODE)
+        END) AS termScore
       FROM 
         groups g JOIN users u ON g.owner_uid = u.uid
-      WHERE MATCH (g.name) AGAINST (? IN BOOLEAN MODE) 
+      WHERE 
+        UPPER(g.name) = ?
+        OR MATCH (g.name) AGAINST (? IN BOOLEAN MODE)
       ORDER BY termScore DESC
       LIMIT ?;`,
-      [expandedQuery, expandedQuery, sys.SEARCH.GROUP_QUERY_LIMIT], cb);
+      [literalQuery, expandedQuery, literalQuery, expandedQuery, sys.SEARCH.GROUP_QUERY_LIMIT], cb);
   }
 
 }

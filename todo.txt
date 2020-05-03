@@ -1,5 +1,4 @@
 
 Fixes:
-- fix search flashcards bug
 - bug with apostrophes in flashcards preventing them from being added to group
 - API that constructs flashcards automatically

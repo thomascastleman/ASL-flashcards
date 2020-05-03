@@ -95,7 +95,11 @@ module.exports = {
       to the given query string */
   searchFlashcards: (query, cb) => {
     // add wildcard to end of query to expand
-    let expandedQuery = query == "" ? query : query + "*";
+    const expandedQuery = query == "" ? query : query + "*";
+
+    // also search for a literal match against the gloss
+    // some glosses are too short for fulltext indexing--so include literal matches
+    const literalQuery = query.toUpperCase();
 
     /* Run the search query (score by match with gloss, but include 
       results that match against definitions as well) */
@@ -104,12 +108,17 @@ module.exports = {
         uid, 
         gloss, 
         definition, 
-        MATCH (gloss) AGAINST (? IN BOOLEAN MODE) AS termScore
+        (CASE
+          WHEN UPPER(gloss) = ? THEN 1000
+          ELSE MATCH (gloss) AGAINST (? IN BOOLEAN MODE)
+        END) AS termScore
       FROM flashcards 
-      WHERE MATCH (gloss, definition) AGAINST (? IN BOOLEAN MODE) 
+      WHERE 
+        UPPER(gloss) = ?
+        OR MATCH (gloss, definition) AGAINST (? IN BOOLEAN MODE)
       ORDER BY termScore DESC
       LIMIT ?;`,
-      [expandedQuery, expandedQuery, sys.SEARCH.CARD_QUERY_LIMIT], cb);
+      [literalQuery, expandedQuery, literalQuery, expandedQuery, sys.SEARCH.CARD_QUERY_LIMIT], cb);
   }
 }
 
@@ -144,6 +153,11 @@ module.exports.deleteFlashcard(2, (err) => {
 });
 
 module.exports.searchFlashcards("est", (err, results) => {
+  console.log(err);
+  console.log(results);
+});
+
+module.exports.searchFlashcards("ut", (err, results) => {
   console.log(err);
   console.log(results);
 });
