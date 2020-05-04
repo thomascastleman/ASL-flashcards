@@ -88,13 +88,8 @@ module.exports = (app) => {
         ti: 'Try creating another flashcard'
       });
 
-      res.rend('message.html', {
-        title: 'Created flashcard!',
-        header: 'Congrats!',
-        message: 'Your flashcard was created!',
-        link: `/flashcard/${cardRow.uid}`,
-        linkTitle: 'View it here!'
-      });
+      // automatically redirect to the view page for the newly-created card
+      res.redirect(`/flashcard/${cardRow.uid}`);
     }
 
     cardCtrl.addFlashcard(req.body.gloss, req.body.definition, 
