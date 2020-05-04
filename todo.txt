@@ -1,0 +1,3 @@
+
+Fixes:
+- remove success page for creating a flashcard

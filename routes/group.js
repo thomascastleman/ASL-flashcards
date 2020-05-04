@@ -136,11 +136,14 @@ module.exports = (app) => {
           fr: 'Failed to search for flashcards to add to this group'
         });
 
-        // make string js-safe
+        // make string safe for injecting it into the js on the frontend
         function safe(str) {
-          return str.replace(/[\'\"\\\/]/gm, function (c) {
-            return '\\' + c;
-          });
+          return str
+            // escape apostrophes & quotes
+            .replace(/[\'\"\\\/]/gm, (c) => {
+              return '\\' + c;
+            })
+            .replace(/\s+/g, ' ');  // normalize excess whitespace to space
         }
 
         // get "safe" versions of the gloss/definition for rendering inline js through mustache
