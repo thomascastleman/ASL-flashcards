@@ -146,7 +146,8 @@ module.exports = {
       // extract the gloss
       const gloss = $('section.article > h1 > span')
         .text()
-        .replace("ASL sign for: ", "")
+        .toLowerCase()
+        .replace("asl sign for: ", "")
         .toUpperCase();
 
       // extract the video
