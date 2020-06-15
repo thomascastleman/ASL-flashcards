@@ -147,7 +147,7 @@ module.exports = {
       const gloss = $('section.article > h1 > span')
         .text()
         .toLowerCase()
-        .replace("asl sign for: ", "")
+        .replace(/asl sign for:? /, "")
         .toUpperCase();
 
       // extract the video
@@ -206,12 +206,11 @@ module.exports.searchFlashcards("est", (err, results) => {
   console.log(results);
 });
 
-module.exports.scrapeFlashcard(tests[5], (err, gloss, definition, video) => {
+module.exports.scrapeFlashcard('<link here>', (err, gloss, definition, video) => {
   if (err) console.log(err);
-  console.log(gloss);
-  console.log(definition);
-  console.log(video);
+  console.log(`Gloss: ${gloss}`);
+  console.log(`Definition: ${definition}`);
+  console.log(`Video: ${video}`);
 });
-
 
 */
