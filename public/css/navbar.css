@@ -40,6 +40,10 @@
   text-decoration: none;
 }
 
+.navbar li a.nav-search-elt {
+  padding: 10px 10px;
+}
+
 /* highlight and change cursor when navbar links hovered */
 .navbar li a:hover {
   background-color: rgba(0, 0, 0, 0.1);
@@ -54,4 +58,9 @@
 /* container for page content on all pages with navbar */
 .container {
   margin-top: 60px;
+}
+
+#nav-search-bar {
+  margin: 0;
+  padding: 0;
 }

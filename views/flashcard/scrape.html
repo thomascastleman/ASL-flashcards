@@ -16,6 +16,14 @@
       <li><a href="/quiz">Quiz</a></li>
       <li><a href="/flashcard/create">Add a Flashcard</a></li>
       <li><a href="/flashcard/scrape">Scrape Flashcard</a></li>
+      <li>
+        <a class="nav-search-elt">
+          <form action="/flashcard/search" method="POST">
+            <input id="nav-search-bar" size="30" name="query" type="text" placeholder="Search cards..." autocomplete="off">
+            <input type="submit" value="Search">
+          </form>
+        </a>
+      </li>
       <div style="float:right">
         {{^defaults.isAuth}}
           <li><a href="/auth/google">Log In</a></li>

@@ -1,8 +1,8 @@
 
-input, textarea {
+.create-form input, .create-form textarea {
   margin-bottom: 20px;
 }
 
-input[type=submit] {
+.create-form input[type=submit] {
   margin-top: 10px;
 }
