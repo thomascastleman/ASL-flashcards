@@ -143,28 +143,38 @@ module.exports = {
       // parse the HTML with cheerio
       const $ = cheerio.load(body);
 
+      let gloss, video, definition;
+
       // extract the gloss
-      const gloss = $('section.article > h1 > span')
-        .text()
-        .toLowerCase()
-        .replace(/asl sign for:? /, "")
-        .toUpperCase();
-
-      // extract the video
-      const path = $('#mySign').attr('src');
-      const video = "https://handspeak.com" + path;
-
-      // extract the definition
-      let definitionContent = $('section.article > p');
-      let definition = "";
-
-      for (let i = 0; i < definitionContent.length; i++) {
-        let line = definitionContent[i];
-        definition += line.children.map(ch => ch.data).join('');
+      try {
+        gloss = $('div.signing_header > h2')
+          .text()
+          .toUpperCase();
+      } catch (e) {
+        cb(Error("failed to scrape flashcard gloss"));
       }
 
-      definition = definition.replace(/\n{3,}/g, "\n\n"); // get rid of multi-newlines
-      definition = definition.replace(/^\n+/, ""); // remove any initial newlines
+      // extract the video URL
+      try {
+        const path = $('source')[0].attribs.src;
+        video = "https://signingsavvy.com/" + path;
+      } catch (e) {
+        cb(Error("failed to scrape flashcard video"));
+      }
+
+      try {
+        const subtitle = $('div.signing_header > h3 > em')
+          .text();
+
+        // extract meaningful portion of subtitle descrip
+        const match = subtitle.match(/\(as in \"(.+?)\"\)/);
+
+        if (match && match.length >= 2) {
+          definition = match[1];
+        }
+      } catch (e) {
+        cb(Error("failed to scrape flashcard definition"));
+      }
 
       // respond with scraped data
       cb(err, gloss, definition, video);
@@ -206,7 +216,8 @@ module.exports.searchFlashcards("est", (err, results) => {
   console.log(results);
 });
 
-module.exports.scrapeFlashcard('<link here>', (err, gloss, definition, video) => {
+module.exports.scrapeFlashcard('https://www.signingsavvy.com/sign/STRAWBERRY/5388/3', 
+(err, gloss, definition, video) => {
   if (err) console.log(err);
   console.log(`Gloss: ${gloss}`);
   console.log(`Definition: ${definition}`);
