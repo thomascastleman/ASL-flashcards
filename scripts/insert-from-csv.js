@@ -8,6 +8,14 @@ const con = db.connection;
 const parse = require('csv-parse');
 const fs = require('fs');
 
+/*
+  Note: Assumes .csv file is of the following format:
+    0 | <header>
+    1 | <gloss-1>,<definition-1>,<video-1>
+    2 | <gloss-2>,<definition-2>,<video-2>
+    ...
+*/
+
 // log an error and exit
 function error(msg) {
   console.log(msg);
