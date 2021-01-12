@@ -3,7 +3,7 @@
   test.js: Automated test data generation
 */
 
-const db = require('./database.js');
+const db = require('../database.js');
 const con = db.connection;
 const casual = require('casual');
 
@@ -186,6 +186,7 @@ testUsers((err) => {
           console.log(`Added ${NUM_ACCURACIES} accuracy measurements.`);
 
           console.log("Test data complete.");
+          process.exit(0);
         });
       });
     });
