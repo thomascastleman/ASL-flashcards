@@ -15,8 +15,6 @@
         correct
       };
 
-      console.log(correct);
-
       // POST update, move to next card if successful
       $.post("/quiz/updateAccuracy", update)
         .done((data) => {
@@ -33,14 +31,19 @@
       $('#params-form').submit();
     }
 
+    // play a video element from its beginning
+    function playVideo(eltId) {
+      const vid = document.getElementById(eltId);
+      vid.currentTime = 0;
+      vid.play();
+    }
+
     function toggleAnswer() {
       $('#answer-container').toggle();
       $('#feedback').toggle();
 
       {{#showGloss}}
-      let vid = document.getElementById('answer-video')
-      vid.currentTime = 0;
-      vid.play();
+      playVideo('answer-video');
       {{/showGloss}}
     }
 
@@ -67,13 +70,20 @@
 
           // 'f' --> wrong
           case 70:
-          $('#wrong-button').click();
+            $('#wrong-button').click();
             break;
 
           // 'e' --> skip
           case 69:
-          $('#skip').click();
+            $('#skip').click();
             break;
+
+          {{^showGloss}}
+          // 'r' --> replay prompt video
+          case 82:
+            playVideo('question-video');
+            break;
+          {{/showGloss}}
         }
       });
 
@@ -106,18 +116,29 @@
     </ul>
   </div>
   <div class="container">
+    <div id="shortcuts">
+      <p><b>Keyboard Shortcuts</b></p>
+      <p><i>space</i> - show answer</p>
+      <p><i>a</i> - I was right</p>
+      <p><i>f</i> - I was wrong</p>
+      <p><i>e</i> - skip</p>
+      {{^showGloss}}
+      <p><i>r</i> - replay prompt video</p>
+      {{/showGloss}}
+    </div>
+
     <a id="params-link" href="/quiz">Choose different quiz parameters</a><br>
 
     {{#showGloss}}
       <h3>What's the sign for: {{card.gloss}}</h3>
       <button id="show-answer">Show Answer</button>
       <div id="answer-container" hidden>
-        <video id="answer-video" src="{{{card.video}}}" width="550" controls></video>
+        <video id="answer-video" src="{{{card.video}}}" width="750" controls></video>
       </div>
     {{/showGloss}}
     {{^showGloss}}
       <h3>What does this sign mean?</h3>
-      <video id="question-video" src="{{{card.video}}}" width="550" controls autoplay></video>
+      <video id="question-video" src="{{{card.video}}}" width="750" controls autoplay></video>
       <br>
       <button id="show-answer">Show Answer</button>
       <div id="answer-container" hidden>
