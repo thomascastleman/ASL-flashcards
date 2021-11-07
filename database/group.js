@@ -51,19 +51,19 @@ module.exports = {
         g.*,
         u.name AS owner_name
       FROM 
-        groups g JOIN users u ON g.owner_uid = u.uid
+        card_groups g JOIN users u ON g.owner_uid = u.uid
       WHERE g.uid = ?;`, 
       [uid], returnRow);
   },
 
   /*  allGroups :: ( -> List<GroupRow>)
-      Get all the groups in the system */
+      Get all the card_groups in the system */
   allGroups: (cb) => {
     con.query(
       `SELECT 
         g.*, 
         u.name AS owner_name 
-      FROM groups g JOIN users u ON g.owner_uid = u.uid;`, cb);
+      FROM card_groups g JOIN users u ON g.owner_uid = u.uid;`, cb);
   },
 
   /*  addGroup :: (name :: String, userUID :: Number -> GroupRow)
@@ -81,8 +81,8 @@ module.exports = {
     }
 
     con.query(
-      `INSERT INTO groups (name, owner_uid) VALUES (?, ?);
-      SELECT * FROM groups WHERE uid = LAST_INSERT_ID();`,
+      `INSERT INTO card_groups (name, owner_uid) VALUES (?, ?);
+      SELECT * FROM card_groups WHERE uid = LAST_INSERT_ID();`,
       [name, userUID], handle);
   },
 
@@ -101,29 +101,29 @@ module.exports = {
     }
 
     con.query(
-      `UPDATE groups SET name = ? WHERE uid = ?;
-      SELECT * FROM groups WHERE uid = ?;`,
+      `UPDATE card_groups SET name = ? WHERE uid = ?;
+      SELECT * FROM card_groups WHERE uid = ?;`,
       [name, uid, uid], handle);
   },
 
   /*  deleteGroup :: (uid :: Number -> )
-      Deletes a group from the groups table, by UID */
+      Deletes a group from the card_groups table, by UID */
   deleteGroup: (uid, cb) => {
-    con.query('DELETE FROM groups WHERE uid = ?;', [uid], cb);
+    con.query('DELETE FROM card_groups WHERE uid = ?;', [uid], cb);
   },
 
   /*  searchGroups :: (query :: String -> List<GroupRow>)
-      Search for groups whose names match the query */
+      Search for card_groups whose names match the query */
   searchGroups: (query, cb) => {
     if (query == "") {
-      // return all groups
+      // return all card_groups
       con.query(`
         SELECT
           g.uid,
           g.name,
           u.name AS owner_name
         FROM 
-          groups g JOIN users u ON g.owner_uid = u.uid
+          card_groups g JOIN users u ON g.owner_uid = u.uid
         ORDER BY g.uid DESC;`,
       cb);
 
@@ -143,7 +143,7 @@ module.exports = {
             ELSE MATCH (g.name) AGAINST (? IN BOOLEAN MODE)
           END) AS termScore
         FROM 
-          groups g JOIN users u ON g.owner_uid = u.uid
+          card_groups g JOIN users u ON g.owner_uid = u.uid
         WHERE 
           UPPER(g.name) = ?
           OR MATCH (g.name) AGAINST (? IN BOOLEAN MODE)

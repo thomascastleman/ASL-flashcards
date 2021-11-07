@@ -5,7 +5,7 @@
 
 const creds   = require('./credentials.js');
 const sys     = require('./settings.js');
-const mysql   = require('mysql');
+const mysql   = require('mysql2');
 
 // establish database connection
 const con = mysql.createPool({

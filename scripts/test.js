@@ -119,7 +119,7 @@ function testGroups(cb) {
   }
 
   // run the insert query
-  con.query('INSERT INTO groups (name, owner_uid) VALUES ?;', [insert], cb);
+  con.query('INSERT INTO card_groups (name, owner_uid) VALUES ?;', [insert], cb);
 }
 
 /*  testInGroupRelation :: ( -> )

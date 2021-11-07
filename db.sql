@@ -30,24 +30,22 @@ CREATE TABLE flashcards (
   gloss VARCHAR(64),
   definition TEXT,
   video VARCHAR(256),
-  PRIMARY KEY (uid)
-);
-
--- create index on gloss & definition, as well as just gloss
-CREATE FULLTEXT INDEX glossDefnIndex ON flashcards(gloss, definition);
-CREATE FULLTEXT INDEX glossIndex ON flashcards(gloss);
+  PRIMARY KEY (uid),
+  -- create index on gloss & definition, as well as just gloss
+  FULLTEXT glossDefnIndex (gloss, definition),
+  FULLTEXT glossIndex (gloss)
+) ENGINE=InnoDB;
 
 -- groups of flashcards
-CREATE TABLE groups (
+CREATE TABLE card_groups (
   uid INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(256),
   owner_uid INT,
   PRIMARY KEY (uid),
-  FOREIGN KEY (owner_uid) REFERENCES users (uid)
-);
-
--- create index on group name
-CREATE FULLTEXT INDEX groupIndex ON groups(name);
+  FOREIGN KEY (owner_uid) REFERENCES users (uid),
+  -- create index on group name
+  FULLTEXT groupIndex (name)
+) ENGINE=InnoDB;
 
 -- relation on flashcards and groups: is flashcard f in group g?
 CREATE TABLE in_group (
@@ -55,7 +53,7 @@ CREATE TABLE in_group (
   group_uid INT NOT NULL,
   flashcard_uid INT NOT NULL,
   PRIMARY KEY (uid),
-  FOREIGN KEY (group_uid) REFERENCES groups (uid) ON DELETE CASCADE,
+  FOREIGN KEY (group_uid) REFERENCES card_groups (uid) ON DELETE CASCADE,
   FOREIGN KEY (flashcard_uid) REFERENCES flashcards (uid) ON DELETE CASCADE
 );
 
